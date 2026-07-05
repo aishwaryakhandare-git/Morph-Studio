@@ -8,13 +8,8 @@ function Hero() {
       <HeroBackground />
 
       <div className="relative mx-auto flex min-h-screen max-w-7xl items-center justify-between gap-16 px-8 pt-32 pb-20">
-
-        {/* Left Side */}
         <HeroContent />
-
-        {/* Right Side */}
         <HeroPreview />
-
       </div>
     </section>
   );

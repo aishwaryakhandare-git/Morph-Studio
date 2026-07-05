@@ -1,4 +1,4 @@
-import { GitHub } from "lucide-react";
+
 
 function Navbar() {
   return (
@@ -28,7 +28,7 @@ function Navbar() {
         {/* Actions */}
         <div className="flex items-center gap-4">
           <button className="flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-white transition hover:border-violet-500">
-            <GitHub size={18} />
+            <span>⭐</span>
             <span>3.2k</span>
           </button>
 
