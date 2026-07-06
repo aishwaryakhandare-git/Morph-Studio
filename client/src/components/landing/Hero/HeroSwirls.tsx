@@ -24,9 +24,9 @@ function HeroSwirls() {
             gradientUnits="userSpaceOnUse"
           >
             <stop offset="0%" stopColor="#F05BFF" />
-            <stop offset="40%" stopColor="#4B74FF" />
-            <stop offset="75%" stopColor="#4B74FF" />
-            <stop offset="100%" stopColor="#22D3EE" />
+            <stop offset="40%" stopColor="#22D3EE" />
+            <stop offset="75%" stopColor="#F05BFF" />
+            <stop offset="100%" stopColor="#4B74FF" />
           </linearGradient>
 
           <filter id="bigGlow">

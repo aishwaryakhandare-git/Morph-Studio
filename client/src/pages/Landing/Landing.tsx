@@ -50,7 +50,7 @@ function Landing() {
         <div className="absolute left-0 top-0 h-[220px] w-[180px] rounded-full bg-fuchsia-500/15 blur-[80px]" />
 
         <HeroSwirls/>
-        
+
         <div className="relative z-10 mx-auto grid max-w-[1500px] grid-cols-[0.95fr_1.05fr] items-center gap-10 px-14 pt-10">
 
           {/* Left */}
@@ -114,6 +114,46 @@ function Landing() {
 </button>
             </div>
 
+          <div className="mt-10 w-[720px] flex items-center gap-4">
+
+            {[
+              {
+                icon: "🍀",
+                title: "Structure First",
+                color: "text-green-400",
+              },
+              {
+                icon: "◎",
+                title: "AI Powered",
+                color: "text-sky-400",
+              },
+              {
+                icon: "◈",
+                title: "Live Preview",
+                color: "text-violet-400",
+              },
+              {
+                icon: "✦",
+                title: "Export Code",
+                color: "text-fuchsia-400",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="flex items-center gap-2 rounded-xl border border-[#2B3048] bg-[#0E1323]/90 px-5 py-3 backdrop-blur-xl transition-all duration-300 hover:border-violet-500/40"
+              >
+                <span className={`text-sm ${item.color}`}>
+                  {item.icon}
+                </span>
+
+                <span className="text-[14px] font-medium text-slate-200">
+                  {item.title}
+                </span>
+              </div>
+            ))}
+
+          </div>
+
           </motion.div>
 
           
@@ -128,59 +168,23 @@ function Landing() {
 
               {/* Inner Background */}
               <div className="h-[500px] w-[700px] overflow-hidden rounded-[18px]">
-  <img
-    src={screen}
-    alt="Dashboard"
-    className="w-full object-top"
-  />
-</div>
+            <img
+              src={screen}
+              alt="Dashboard"
+              className="w-full object-top"
+            />
+          </div>
 
+          
+          
              </div>
 
           </motion.div>
 
         </div>
+
       </section>
     
-    
-      {/* ================= TRUSTED BY ================= */}
-      <section className="mx-auto mt-28 max-w-7xl px-8">
-        <p className="mb-8 text-center text-sm uppercase tracking-[0.3em] text-slate-500">
-          Trusted by modern product teams
-        </p>
-
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-5">
-          {["Google","Microsoft","Vercel","Linear","Notion"].map((company)=>(
-            <div
-              key={company}
-              className="rounded-2xl border border-white/10 bg-white/5 py-6 text-center text-lg font-semibold text-slate-300"
-            >
-              {company}
-            </div>
-          ))}
-        </div>
-      </section>
-
-
-      <section className="mx-auto mt-10 max-w-7xl px-8">
-        <div className="flex flex-wrap justify-center gap-4">
-
-          {[
-            "Structure First",
-            "AI Powered",
-            "Live Preview",
-            "Export Code"
-          ].map((item) => (
-            <div
-              key={item}
-              className="rounded-xl border border-[#2A2D45] bg-[#0B1020]/80 px-5 py-3 text-sm font-medium text-slate-300 backdrop-blur-xl"
-            >
-              {item}
-            </div>
-          ))}
-
-        </div>
-      </section>
 
       {/* ================= FEATURES ================= */}
       <section className="mx-auto mt-32 max-w-7xl px-8">
