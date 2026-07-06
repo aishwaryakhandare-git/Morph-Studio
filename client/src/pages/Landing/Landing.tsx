@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import screen from "../../assets/screen.png";
+import HeroSwirls from "../../components/landing/Hero/HeroSwirls";
 
 function Landing() {
   return (
@@ -37,7 +38,7 @@ function Landing() {
       </header>
 
       {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden pt-28 pb-8">
+      <section className="relative min-h-screen overflow-hidden pt-28">
         {/* Background */}
         <div className="absolute inset-0 bg-[#070B1A]" />
 
@@ -48,7 +49,9 @@ function Landing() {
 
         <div className="absolute left-0 top-0 h-[220px] w-[180px] rounded-full bg-fuchsia-500/15 blur-[80px]" />
 
-        <div className="relative z-10 mx-auto grid max-w-[1500px] grid-cols-[0.95fr_1.05fr] items-center gap-10 px-14 pt-6">
+        <HeroSwirls/>
+        
+        <div className="relative z-10 mx-auto grid max-w-[1500px] grid-cols-[0.95fr_1.05fr] items-center gap-10 px-14 pt-10">
 
           {/* Left */}
           <motion.div
