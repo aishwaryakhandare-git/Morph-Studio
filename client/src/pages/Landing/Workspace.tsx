@@ -538,7 +538,73 @@ function Workspace() {
 
       </div>
 
+{/* ================================================= */}
+{/* AI PROMPT BAR */}
+{/* ================================================= */}
+
+<div className="border-t border-white/10 bg-[#0B1020] px-8 py-5">
+
+  <div className="mx-auto flex max-w-[1500px] items-end gap-4 rounded-[24px] border border-white/10 bg-[#111827] p-4 shadow-[0_15px_50px_rgba(0,0,0,.35)]">
+
+    {/* Left Actions */}
+
+    <div className="flex gap-2 pb-1">
+
+      <button className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#181F31] transition hover:border-violet-500">
+        📎
+      </button>
+
+      <button className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#181F31] transition hover:border-violet-500">
+        🖼️
+      </button>
+
+      <button className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#181F31] transition hover:border-violet-500">
+        🎤
+      </button>
+
     </div>
+
+    {/* Prompt */}
+
+    <div className="flex-1">
+
+      <textarea
+        rows={2}
+        placeholder="Describe the interface you want to create..."
+        className="w-full resize-none bg-transparent text-[15px] leading-7 text-white outline-none placeholder:text-slate-500"
+      />
+
+      <div className="mt-3 flex items-center gap-3">
+
+        <button className="rounded-lg border border-white/10 bg-[#181F31] px-4 py-2 text-sm text-slate-400 transition hover:border-violet-500">
+          GPT-5.5 ▼
+        </button>
+
+        <button className="rounded-lg border border-white/10 bg-[#181F31] px-4 py-2 text-sm text-slate-400 transition hover:border-violet-500">
+          AI Theme ▼
+        </button>
+
+        <button className="rounded-lg border border-white/10 bg-[#181F31] px-4 py-2 text-sm text-slate-400 transition hover:border-violet-500">
+          Desktop ▼
+        </button>
+
+      </div>
+
+    </div>
+
+    {/* Generate */}
+
+    <button className="rounded-2xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] px-8 py-4 font-semibold text-white shadow-[0_0_30px_rgba(124,58,237,.35)] transition hover:brightness-110">
+
+      Generate →
+
+    </button>
+
+  </div>
+
+</div>
+
+</div>
   );
 }
 
