@@ -26,7 +26,6 @@ import {
   Pencil,
   Code2,
   LayoutGrid,
-  Users,
 } from "lucide-react";
 
 function Landing() {
@@ -731,99 +730,104 @@ function Landing() {
   </div>
 
 </section>
-      {/* ================= FEATURES ================= */}
-      <section className="mx-auto mt-20 max-w-7xl px-8">
-        <div className="mb-14 text-center">
-          <h2 className="text-5xl font-black">
-            Build Faster with AI
-          </h2>
+{/* ================= POWERFUL FEATURES ================= */}
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-400">
-            Morph Studio understands structure first, then generates beautiful,
-            production-ready interfaces that can be edited visually.
+<section className="mx-auto mt-28 max-w-[1420px] px-8">
+
+  <div className="text-center">
+
+    <p className="text-[12px] font-semibold uppercase tracking-[0.35em] text-violet-400">
+      POWERFUL FEATURES
+    </p>
+
+    <h2 className="mt-3 text-[42px] font-bold tracking-[-0.5px] text-white">
+      Everything you need to build better UI
+    </h2>
+
+  </div>
+
+  <div className="mt-12 flex justify-center gap-5 flex-wrap">
+
+    {[
+      {
+        icon: Bot,
+        color: "#22C55E",
+        title: "Structure First AI",
+        desc: "AI understands layout\nbefore generating UI.",
+      },
+      {
+        icon: Lock,
+        color: "#EC4899",
+        title: "Zone Locking",
+        desc: "Lock sections you love.\nAI won't touch them.",
+      },
+      {
+        icon: Pencil,
+        color: "#3B82F6",
+        title: "Live Edit",
+        desc: "Edit in real-time and\nsee changes instantly.",
+      },
+      {
+        icon: Code2,
+        color: "#A855F7",
+        title: "Code Export",
+        desc: "Export clean,\nproduction-ready code.",
+      },
+      {
+        icon: LayoutGrid,
+        color: "#F59E0B",
+        title: "Design Systems",
+        desc: "Build with your own\ncomponents.",
+      },
+      {
+        icon: Users,
+        color: "#8B5CF6",
+        title: "Team Collaboration",
+        desc: "Work together\nin real-time.",
+      },
+    ].map((feature) => {
+
+      const Icon = feature.icon;
+
+      return (
+
+        <div
+          key={feature.title}
+          className="group h-[170px] w-[198px] rounded-[18px] border border-white/8 bg-[#0F1423] p-6 transition-all duration-300 hover:border-violet-500/40 hover:bg-[#11182B]"
+        >
+
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-xl"
+            style={{
+              background: `${feature.color}15`,
+              border: `1px solid ${feature.color}30`,
+              boxShadow: `0 0 20px ${feature.color}25`,
+            }}
+          >
+            <Icon
+              size={18}
+              color={feature.color}
+            />
+          </div>
+
+          <h3 className="mt-6 text-[18px] font-semibold text-white leading-6">
+            {feature.title}
+          </h3>
+
+          <p className="mt-3 whitespace-pre-line text-[14px] leading-6 text-slate-400">
+            {feature.desc}
           </p>
+
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-3">
-          {[
-            {
-              title:"Structure Lock",
-              desc:"Lock layout before generating UI."
-            },
-            {
-              title:"AI Components",
-              desc:"Generate reusable production-ready components."
-            },
-            {
-              title:"One Click Export",
-              desc:"Export directly to React + Tailwind."
-            },
-            {
-              title:"Smart Editing",
-              desc:"Regenerate only selected sections."
-            },
-            {
-              title:"Team Workspace",
-              desc:"Collaborate with designers and developers."
-            },
-            {
-              title:"Version History",
-              desc:"Restore previous generations anytime."
-            }
-          ].map((item)=>(
-            <div
-              key={item.title}
-              className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl"
-            >
-              <div className="mb-6 h-14 w-14 rounded-2xl bg-gradient-to-br from-violet-500 to-cyan-500"/>
+      );
 
-              <h3 className="text-2xl font-bold">
-                {item.title}
-              </h3>
+    })}
 
-              <p className="mt-4 leading-7 text-slate-400">
-                {item.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+  </div>
 
-      {/* ================= HOW IT WORKS ================= */}
-      <section className="mx-auto mt-32 mb-24 max-w-7xl px-8">
-        <div className="mb-14 text-center">
-          <h2 className="text-5xl font-black">
-            How Morph Studio Works
-          </h2>
-        </div>
+</section>
 
-        <div className="grid gap-8 md:grid-cols-3">
-          {[
-            ["01","Describe your interface"],
-            ["02","AI understands structure"],
-            ["03","Export production-ready code"]
-          ].map(([no,title])=>(
-            <div
-              key={no}
-              className="rounded-3xl border border-white/10 bg-[#111528] p-8"
-            >
-              <span className="text-5xl font-black text-violet-500">
-                {no}
-              </span>
-
-              <h3 className="mt-6 text-2xl font-bold">
-                {title}
-              </h3>.;
-
-              <p className="mt-4 leading-7 text-slate-400">
-                Fast, collaborative and optimized for modern React development.
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-    
       {/* ================= CTA ================= */}
       <section className="mx-auto mt-32 max-w-7xl px-8">
         <div className="rounded-[36px] border border-white/10 bg-gradient-to-br from-violet-700/20 to-cyan-600/10 p-16 text-center backdrop-blur-xl">
