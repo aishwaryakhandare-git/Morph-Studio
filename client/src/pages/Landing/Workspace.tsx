@@ -7,6 +7,7 @@ import {
   Image,
   Settings,
   Plus,
+  PanelLeft,
 } from "lucide-react";
 
 function Workspace() {
@@ -22,6 +23,8 @@ const [messages, setMessages] = useState([
 const [isGenerating, setIsGenerating] = useState(false);
 
 const [previewTitle, setPreviewTitle] = useState("Website Preview");
+
+const [sidebarOpen, setSidebarOpen] = useState(true);
 
 const handleGenerate = () => {
 
@@ -71,7 +74,14 @@ const handleGenerate = () => {
 
   {/* Left */}
 
-  <div className="flex items-center gap-8">
+  <div className="flex items-center gap-5">
+
+    <button
+    onClick={() => setSidebarOpen(!sidebarOpen)}
+    className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/5 bg-[#111827] transition hover:bg-[#171C2E]"
+    >
+    <PanelLeft size={20} />
+    </button>
 
     {/* Project */}
 
@@ -142,49 +152,65 @@ const handleGenerate = () => {
 
       {/* ================= MAIN WORKSPACE ================= */}
 
-      <div className="grid h-[calc(100vh-72px)] grid-cols-[260px_430px_1fr]">
+      <div
+        className="grid h-[calc(100vh-72px)] transition-all duration-300"
+        style={{
+        gridTemplateColumns: sidebarOpen
+            ? "260px 430px 1fr"
+            : "72px 430px 1fr",
+        }}
+        >
+
+
 
         {/* ================================================= */}
         {/* SIDEBAR */}
         {/* ================================================= */}
 
-        <aside className="flex flex-col border-r border-white/10 bg-[#0B1020]">
+        <aside
+        className={`border-r border-white/10 bg-[#0B1020] transition-all duration-300 overflow-hidden ${
+            sidebarOpen ? "w-[260px]" : "w-[72px]"
+        }`}
+        >
 
           {/* Logo */}
 
           <div className="flex h-[72px] items-center border-b border-white/10 px-6">
 
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-500/30 bg-gradient-to-br from-[#24124D] to-[#5A31F4]">
-
-              <span className="font-bold text-violet-300">
-                M
-              </span>
-
+                <span className="font-bold text-violet-300">M</span>
             </div>
 
-            <div className="ml-3">
+            {sidebarOpen && (
+                <div className="ml-3">
+                <h2 className="font-semibold">
+                    Morph Studio
+                </h2>
 
-              <h2 className="font-semibold">
-                Morph Studio
-              </h2>
-
-              <p className="text-xs text-slate-500">
-                AI Workspace
-              </p>
+                <p className="text-xs text-slate-500">
+                    AI Workspace
+                </p>
+                </div>
+            )}
 
             </div>
-
-          </div>
 
           {/* New Project */}
 
           <div className="p-5">
 
-            <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] py-3 font-semibold transition hover:brightness-110">
+            <button className={`flex items-center rounded-xl bg-gradient-to-r
+            from-[#6D4AFF] to-[#8F3FFF] py-3 font-semibold
+            transition hover:brightness-110
+            ${
+            sidebarOpen
+                ? "w-full justify-center gap-2"
+                : "h-12 w-12 justify-center mx-auto"
+            }`}>
 
               <Plus size={18} />
 
-              New Project
+              {sidebarOpen && "New Project"}
 
             </button>
 
@@ -222,14 +248,17 @@ const handleGenerate = () => {
               return (
 
                 <button
-                  key={item.title}
-                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-slate-400 transition hover:bg-[#171C2E] hover:text-white"
+                key={item.title}
+                className={`flex items-center rounded-xl py-3 transition
+                ${
+                    sidebarOpen
+                    ? "w-full gap-3 px-4 justify-start"
+                    : "h-12 w-12 mx-auto justify-center"
+                }
+                text-slate-400 hover:bg-[#171C2E] hover:text-white`}
                 >
-
-                  <Icon size={18} />
-
-                  {item.title}
-
+                <Icon size={18} />
+                {sidebarOpen && item.title}
                 </button>
 
               );
@@ -250,17 +279,15 @@ const handleGenerate = () => {
 
               </div>
 
-              <div>
+              {sidebarOpen && (
+                <div>
 
-                <p className="font-medium">
-                  Aishwarya
-                </p>
+                <p>Aishwarya</p>
 
-                <p className="text-xs text-slate-500">
-                  Free Plan
-                </p>
+                <p>Free Plan</p>
 
-              </div>
+                </div>
+                )}
 
             </div>
 
@@ -568,7 +595,13 @@ const handleGenerate = () => {
 
   <div className="flex items-center justify-between border-t border-white/10 px-6 py-4">
 
-    <div className="flex items-center gap-3">
+    <div
+    className={`flex items-center ${
+        sidebarOpen
+        ? "gap-3"
+        : "justify-center"
+    }`}
+    >
 
       <button className="rounded-xl border border-white/10 bg-[#13192B] px-4 py-2 text-sm hover:border-violet-500">
         Zoom 100%

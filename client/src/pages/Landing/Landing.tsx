@@ -118,6 +118,7 @@ function Landing() {
 
             <div className="mt-12 flex items-center gap-5">
               <button
+                onClick={() => navigate("/workspace")}
                 className="group flex h-[56px] items-center gap-4 rounded-2xl border border-violet-500/20 bg-gradient-to-r from-[#5B5EF7] to-[#8B3DFF] px-8 text-[16px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,.35)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(124,58,237,.55)]"
               >
                 <span>Start Building</span>
