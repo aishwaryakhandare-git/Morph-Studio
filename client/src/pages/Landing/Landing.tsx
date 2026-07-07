@@ -233,46 +233,47 @@ function Landing() {
 
         <nav className="space-y-1 px-4 pb-6">
 
-          {[
-            "Dashboard",
-            "Projects",
-            "Templates",
-            "Components",
-            "Design Systems",
-            "AI Tools",
-            "",
-            "Team",
-            "Settings",
-            "Billing",
-          ].map((item) =>
+  {[
+    { icon: LayoutDashboard, label: "Dashboard" },
+    { icon: FolderOpen, label: "Projects" },
+    { icon: LayoutTemplate, label: "Templates" },
+    { icon: Boxes, label: "Components" },
+    { icon: Palette, label: "Design Systems" },
+    { icon: Sparkles, label: "AI Tools" },
+    { divider: true },
+    { icon: Users, label: "Team" },
+    { icon: Settings, label: "Settings" },
+    { icon: CreditCard, label: "Billing" },
+  ].map((item, index) => {
 
-            item === "" ? (
+    if ("divider" in item)
+      return (
+        <div
+          key={index}
+          className="my-4 border-t border-white/10"
+        />
+      );
 
-              <div
-                key="divider"
-                className="my-4 border-t border-white/10"
-              />
+    const Icon = item.icon;
 
-            ) : (
+    return (
+      <button
+        key={item.label}
+        className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 transition ${
+          item.label === "Dashboard"
+            ? "bg-violet-600/20 text-white"
+            : "text-slate-400 hover:bg-[#171D30]"
+        }`}
+      >
+        <Icon size={18} />
 
-              <button
-                key={item}
-                className={`flex w-full items-center rounded-lg px-4 py-3 text-left text-sm transition
-                ${
-                  item === "Dashboard"
-                    ? "bg-[#171D30] text-white"
-                    : "text-slate-400 hover:bg-[#171D30]"
-                }`}
-              >
-                {item}
-              </button>
+        <span>{item.label}</span>
+      </button>
+    );
 
-            )
+  })}
 
-          )}
-
-        </nav>
-
+</nav>
         {/* User */}
 
         <div className="mt-auto border-t border-white/10 p-5">
