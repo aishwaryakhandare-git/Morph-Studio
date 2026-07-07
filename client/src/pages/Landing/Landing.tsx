@@ -213,9 +213,29 @@ function Landing() {
 
         <div className="border-b border-white/10 p-5">
 
-          <h3 className="text-lg font-semibold">
-            Morph Studio
-          </h3>
+          <div className="flex items-center gap-3">
+
+  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-violet-500/30 bg-gradient-to-br from-[#25154A] to-[#4C1D95]">
+
+    <span className="font-bold text-violet-300">
+      M
+    </span>
+
+  </div>
+
+  <div>
+
+    <h3 className="font-semibold">
+      Morph Studio
+    </h3>
+
+    <p className="text-xs text-slate-500">
+      AI Workspace
+    </p>
+
+  </div>
+
+</div>
 
         </div>
 
@@ -328,8 +348,8 @@ function Landing() {
         Import Design
       </button>
 
-      <button className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold">
-        + New Generation
+      <button className="rounded-xl border border-white/10 bg-[#111827] px-5 py-3 text-sm">
+        Recent ▼
       </button>
 
     </div>
@@ -365,7 +385,7 @@ function Landing() {
 
       <div
         key={project.name}
-        className="group rounded-2xl border border-white/10 bg-[#101528] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-violet-500 hover:shadow-[0_15px_35px_rgba(139,92,246,.25)]"
+        className="rounded-2xl border border-white/10 bg-[#101528] p-5 transition hover:border-violet-500"
       >
 
         <div className="mb-5 flex h-32 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600/20 via-[#171D30] to-cyan-500/20">
