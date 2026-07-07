@@ -291,11 +291,133 @@ function Landing() {
 
       {/* ================= MAIN ================= */}
 
-      <div className="rounded-2xl border border-dashed border-slate-700 flex items-center justify-center text-slate-500">
+<div>
 
-        Main Dashboard
+  {/* Header */}
+
+  <div className="mb-8 flex items-center justify-between">
+
+    <div>
+
+      <h2 className="text-3xl font-bold text-white">
+        Welcome back, Aishwarya 👋
+      </h2>
+
+      <p className="mt-2 text-slate-400">
+        Continue building your AI interfaces.
+      </p>
+
+    </div>
+
+    <div className="flex gap-3">
+
+      <button className="rounded-xl border border-white/10 bg-[#111827] px-5 py-3 text-sm hover:border-violet-500">
+        Import Design
+      </button>
+
+      <button className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold">
+        + New Generation
+      </button>
+
+    </div>
+
+  </div>
+
+  {/* ================= RECENT PROJECTS ================= */}
+
+  <h3 className="mb-5 text-xl font-semibold">
+    Recent Projects
+  </h3>
+
+  <div className="grid grid-cols-2 gap-5">
+
+    {[
+      {
+        name: "Landing Page",
+        updated: "2 min ago",
+      },
+      {
+        name: "Analytics Dashboard",
+        updated: "25 min ago",
+      },
+      {
+        name: "Pricing Page",
+        updated: "Yesterday",
+      },
+      {
+        name: "Portfolio",
+        updated: "2 days ago",
+      },
+    ].map((project) => (
+
+      <div
+        key={project.name}
+        className="rounded-2xl border border-white/10 bg-[#101528] p-5 transition hover:border-violet-500"
+      >
+
+        <div className="mb-5 h-32 rounded-xl bg-gradient-to-br from-[#1A2240] to-[#131A2F]" />
+
+        <div className="flex items-center justify-between">
+
+          <div>
+
+            <h4 className="font-semibold">
+              {project.name}
+            </h4>
+
+            <p className="mt-1 text-sm text-slate-400">
+              Updated {project.updated}
+            </p>
+
+          </div>
+
+          <span className="rounded-full bg-violet-500/10 px-3 py-1 text-xs text-violet-300">
+            React
+          </span>
+
+        </div>
 
       </div>
+
+    ))}
+
+  </div>
+
+  {/* ================= ACTIVITY OVERVIEW ================= */}
+
+  <h3 className="mb-5 mt-10 text-xl font-semibold">
+    Activity Overview
+  </h3>
+
+  <div className="grid grid-cols-4 gap-4">
+
+    {[
+      ["Projects","12"],
+      ["AI Generations","148"],
+      ["Exports","32"],
+      ["Templates","9"],
+    ].map(([title,value]) => (
+
+      <div
+        key={title}
+        className="rounded-2xl border border-white/10 bg-[#101528] p-5"
+      >
+
+        <p className="text-sm text-slate-400">
+          {title}
+        </p>
+
+        <h3 className="mt-3 text-3xl font-bold">
+          {value}
+        </h3>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
 
       {/* ================= RIGHT PANEL ================= */}
 
