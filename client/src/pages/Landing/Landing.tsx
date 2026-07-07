@@ -14,6 +14,12 @@ import {
   CreditCard,
 } from "lucide-react";
 
+import {
+  PenTool,
+  BrainCircuit,
+  Download,
+} from "lucide-react";
+
 function Landing() {
   return (
     <div className="min-h-screen bg-[#070B1A] text-white">
@@ -585,8 +591,134 @@ function Landing() {
 
 </section>
 
+{/* ================= HOW MORPH WORKS ================= */}
+
+<section className="mx-auto mt-32 max-w-[1500px] px-8">
+
+  <div className="text-center">
+
+    <p className="mb-4 text-[13px] font-semibold uppercase tracking-[0.35em] text-violet-400">
+      HOW MORPH WORKS
+    </p>
+
+    <h2 className="text-[42px] font-bold tracking-[-1px] text-white">
+      From Intent to Interface in Seconds
+    </h2>
+
+  </div>
+
+  <div className="mt-12 flex items-center justify-center">
+
+    {[
+      {
+        no: "1",
+        title: "Describe",
+        desc: "Describe your layout\nin simple text.",
+        color: "#22C55E",
+        glow: "shadow-[0_0_35px_rgba(34,197,94,.45)]",
+      },
+      {
+        no: "2",
+        title: "Understand",
+        desc: "AI reads structure\nand user intent.",
+        color: "#3B82F6",
+        glow: "shadow-[0_0_35px_rgba(59,130,246,.45)]",
+      },
+      {
+        no: "3",
+        title: "Generate",
+        desc: "Instant UI generation\nwith perfect structure.",
+        color: "#A855F7",
+        glow: "shadow-[0_0_35px_rgba(168,85,247,.45)]",
+      },
+      {
+        no: "4",
+        title: "Refine & Export",
+        desc: "Customize, export code\nand ship faster.",
+        color: "#F59E0B",
+        glow: "shadow-[0_0_35px_rgba(245,158,11,.45)]",
+      },
+    ].map((item, index) => (
+
+      <div
+        key={item.no}
+        className="flex items-center"
+      >
+
+        {/* CARD */}
+
+        <div className="w-[250px] h-[120px] rounded-[24px] border border-white/10 bg-[#0F1424] px-6 py-5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-violet-500/40">
+
+          <div
+            className={`mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#141B2D] ${item.glow}`}
+            style={{
+              border: `1px solid ${item.color}30`,
+            }}
+          >
+
+            <span
+              className="text-base font-semibold"
+              style={{
+                color: item.color,
+              }}
+            >
+              {item.no}
+            </span>
+
+          </div>
+
+          <h3
+            className="text-[18px] font-semibold"
+            style={{
+              color: item.color,
+            }}
+          >
+            {item.no} {item.title}
+          </h3>
+
+          <p className="mt-2 whitespace-pre-line text-[14px] leading-6 text-slate-400">
+            {item.desc}
+          </p>
+
+        </div>
+
+        {/* CONNECTOR */}
+
+        {index !== 3 && (
+
+          <div className="mx-3 flex items-center">
+
+            <div className="w-7 border-t border-dashed border-violet-500/50" />
+
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5 12H19M19 12L14 7M19 12L14 17"
+                stroke="#9F7AEA"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+
+          </div>
+
+        )}
+
+      </div>
+
+    ))}
+
+  </div>
+
+</section>
+
       {/* ================= FEATURES ================= */}
-      <section className="mx-auto mt-32 max-w-7xl px-8">
+      <section className="mx-auto mt-20 max-w-7xl px-8">
         <div className="mb-14 text-center">
           <h2 className="text-5xl font-black">
             Build Faster with AI
