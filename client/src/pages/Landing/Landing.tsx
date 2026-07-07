@@ -431,7 +431,7 @@ function Landing() {
           {title}
         </p>
 
-        <h3 className="mt-3 text-3xl font-bold">
+        <h3 className="mt-3 bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-4xl font-bold text-transparent">
           {value}
         </h3>
 
