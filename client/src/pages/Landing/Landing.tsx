@@ -28,6 +28,12 @@ import {
   LayoutGrid,
 } from "lucide-react";
 
+import {
+  FaGithub,
+  FaDiscord,
+  FaXTwitter,
+} from "react-icons/fa6";
+
 function Landing() {
   return (
     <div className="min-h-screen bg-[#070B1A] text-white">
@@ -918,53 +924,172 @@ function Landing() {
   </div>
 
 </section>
+
       {/* ================= FOOTER ================= */}
-      <footer className="mx-auto mt-32 max-w-7xl border-t border-white/10 px-8 py-14">
-        <div className="grid gap-10 md:grid-cols-4">
 
-          <div>
-            <h3 className="text-2xl font-bold">Morph Studio</h3>
-            <p className="mt-4 leading-7 text-slate-400">
-              AI-powered UI generation platform for modern product teams.
-            </p>
-          </div>
+<footer className="mx-auto mt-14 w-[96%] max-w-[1700px] border-t border-white/10 pt-12 pb-8">
 
-          <div>
-            <h4 className="mb-4 font-semibold">Product</h4>
-            <ul className="space-y-3 text-slate-400">
-              <li>Features</li>
-              <li>Roadmap</li>
-              <li>Pricing</li>
-              <li>Integrations</li>
-            </ul>
-          </div>
+  <div className="grid grid-cols-[1.3fr_0.8fr_0.8fr_0.8fr_0.8fr_1.4fr] gap-10">
 
-          <div>
-            <h4 className="mb-4 font-semibold">Resources</h4>
-            <ul className="space-y-3 text-slate-400">
-              <li>Documentation</li>
-              <li>Blog</li>
-              <li>Community</li>
-              <li>Support</li>
-            </ul>
-          </div>
+    {/* Brand */}
 
-          <div>
-            <h4 className="mb-4 font-semibold">Company</h4>
-            <ul className="space-y-3 text-slate-400">
-              <li>About</li>
-              <li>Careers</li>
-              <li>Privacy</li>
-              <li>Terms</li>
-            </ul>
-          </div>
+    <div>
 
+      <div className="flex items-center gap-3">
+
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-violet-500/30 bg-gradient-to-br from-[#25154A] to-[#4C1D95]">
+          <span className="text-lg font-semibold text-violet-300">
+            M
+          </span>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-8 text-center text-slate-500">
-          © 2026 Morph Studio. All rights reserved.
-        </div>
-      </footer>
+        <h3 className="text-[28px] font-bold">
+          Morph Studio
+        </h3>
+
+      </div>
+
+      <p className="mt-6 max-w-[250px] text-[16px] leading-7 text-slate-400">
+        AI that understands structure before style.
+      </p>
+
+      <div className="mt-7 flex gap-5 text-slate-400">
+
+  <FaGithub className="cursor-pointer text-xl transition hover:text-white" />
+
+  <FaXTwitter className="cursor-pointer text-xl transition hover:text-white" />
+
+  <FaDiscord className="cursor-pointer text-xl transition hover:text-white" />
+
+</div>
+
+    </div>
+
+    {/* Product */}
+
+    <div>
+
+      <h4 className="mb-5 text-lg font-semibold text-white">
+        Product
+      </h4>
+
+      <ul className="space-y-4 text-slate-400">
+
+        <li>Features</li>
+        <li>How It Works</li>
+        <li>Pricing</li>
+        <li>Roadmap</li>
+
+      </ul>
+
+    </div>
+
+    {/* Resources */}
+
+    <div>
+
+      <h4 className="mb-5 text-lg font-semibold text-white">
+        Resources
+      </h4>
+
+      <ul className="space-y-4 text-slate-400">
+
+        <li>Docs</li>
+        <li>Templates</li>
+        <li>Components</li>
+        <li>Changelog</li>
+
+      </ul>
+
+    </div>
+
+    {/* Company */}
+
+    <div>
+
+      <h4 className="mb-5 text-lg font-semibold text-white">
+        Company
+      </h4>
+
+      <ul className="space-y-4 text-slate-400">
+
+        <li>About Us</li>
+        <li>Careers</li>
+        <li>Contact</li>
+        <li>Privacy</li>
+
+      </ul>
+
+    </div>
+
+    {/* Community */}
+
+    <div>
+
+      <h4 className="mb-5 text-lg font-semibold text-white">
+        Community
+      </h4>
+
+      <ul className="space-y-4 text-slate-400">
+
+        <li>Discord</li>
+        <li>GitHub</li>
+        <li>Twitter</li>
+        <li>YouTube</li>
+
+      </ul>
+
+    </div>
+
+    {/* Newsletter */}
+
+    <div className="rounded-2xl border border-white/10 bg-[#101524] p-7">
+
+      <h3 className="text-2xl font-semibold text-white">
+        Stay in the loop
+      </h3>
+
+      <p className="mt-4 text-[15px] leading-7 text-slate-400">
+        Get updates on new features and releases.
+      </p>
+
+      <div className="mt-8 flex gap-3">
+
+        <input
+          type="email"
+          placeholder="Enter your email"
+          className="flex-1 rounded-xl border border-white/10 bg-[#0B1020] px-4 py-3 text-white outline-none placeholder:text-slate-500"
+        />
+
+        <button className="rounded-xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] px-6 font-semibold text-white">
+          Subscribe
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  {/* Bottom */}
+
+  <div className="mt-12 flex items-center justify-between border-t border-white/10 pt-8 text-sm text-slate-500">
+
+    <p>
+      © 2026 Morph Studio. All rights reserved.
+    </p>
+
+    <div className="flex gap-8">
+
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+      <a href="#">Cookies</a>
+
+    </div>
+
+  </div>
+
+</footer>
 
     </div>
   );
