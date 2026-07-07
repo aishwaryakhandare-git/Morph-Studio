@@ -185,6 +185,131 @@ function Landing() {
 
       </section>
     
+      {/* ================= DASHBOARD SECTION ================= */}
+
+<section className="mx-auto mt-32 mb-32 max-w-[1450px] px-8">
+
+  <div className="rounded-[28px] border border-white/10 bg-[#0B1020]/95 p-6 shadow-[0_25px_80px_rgba(0,0,0,.45)]">
+
+    <div className="grid grid-cols-[220px_1fr_300px] gap-6">
+
+      {/* ================= SIDEBAR ================= */}
+
+      <aside className="rounded-2xl border border-white/10 bg-[#0E1323]">
+
+        {/* Logo */}
+
+        <div className="border-b border-white/10 p-5">
+
+          <h3 className="text-lg font-semibold">
+            Morph Studio
+          </h3>
+
+        </div>
+
+        {/* New Project */}
+
+        <div className="p-5">
+
+          <button className="w-full rounded-xl bg-gradient-to-r from-[#6D4AFF] to-[#8B3DFF] py-3 text-sm font-semibold">
+            + New Project
+          </button>
+
+        </div>
+
+        {/* Navigation */}
+
+        <nav className="space-y-1 px-4 pb-6">
+
+          {[
+            "Dashboard",
+            "Projects",
+            "Templates",
+            "Components",
+            "Design Systems",
+            "AI Tools",
+            "",
+            "Team",
+            "Settings",
+            "Billing",
+          ].map((item) =>
+
+            item === "" ? (
+
+              <div
+                key="divider"
+                className="my-4 border-t border-white/10"
+              />
+
+            ) : (
+
+              <button
+                key={item}
+                className={`flex w-full items-center rounded-lg px-4 py-3 text-left text-sm transition
+                ${
+                  item === "Dashboard"
+                    ? "bg-[#171D30] text-white"
+                    : "text-slate-400 hover:bg-[#171D30]"
+                }`}
+              >
+                {item}
+              </button>
+
+            )
+
+          )}
+
+        </nav>
+
+        {/* User */}
+
+        <div className="mt-auto border-t border-white/10 p-5">
+
+          <div className="flex items-center gap-3">
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-600 font-bold">
+              A
+            </div>
+
+            <div>
+
+              <p className="text-sm font-medium">
+                Aishwarya
+              </p>
+
+              <p className="text-xs text-slate-400">
+                Pro Plan
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+      {/* ================= MAIN ================= */}
+
+      <div className="rounded-2xl border border-dashed border-slate-700 flex items-center justify-center text-slate-500">
+
+        Main Dashboard
+
+      </div>
+
+      {/* ================= RIGHT PANEL ================= */}
+
+      <div className="rounded-2xl border border-dashed border-slate-700 flex items-center justify-center text-slate-500">
+
+        Activity Panel
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
       {/* ================= FEATURES ================= */}
       <section className="mx-auto mt-32 max-w-7xl px-8">
