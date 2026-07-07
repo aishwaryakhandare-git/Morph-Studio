@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   FolderOpen,
   LayoutTemplate,
@@ -8,6 +10,56 @@ import {
 } from "lucide-react";
 
 function Workspace() {
+    const [prompt, setPrompt] = useState("");
+
+const [messages, setMessages] = useState([
+  {
+    sender: "ai",
+    text: "Welcome to Morph Studio 👋 Describe the interface you'd like to build.",
+  },
+]);
+
+const [isGenerating, setIsGenerating] = useState(false);
+
+const [previewTitle, setPreviewTitle] = useState("Website Preview");
+
+const handleGenerate = () => {
+
+  if (!prompt.trim()) return;
+
+  const userPrompt = prompt;
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      sender: "user",
+      text: userPrompt,
+    },
+  ]);
+
+  setPrompt("");
+
+  setIsGenerating(true);
+
+  setTimeout(() => {
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        sender: "ai",
+        text:
+          "I've generated a modern layout based on your prompt. You can now modify the design, switch themes or export the code.",
+      },
+    ]);
+
+    setPreviewTitle(userPrompt);
+
+    setIsGenerating(false);
+
+  }, 1800);
+
+};
+
   return (
     <div className="h-screen overflow-hidden bg-[#070B1A] text-white">
 
@@ -387,7 +439,7 @@ function Workspace() {
       </p>
 
       <h2 className="mt-2 text-2xl font-bold">
-        Website Preview
+        {previewTitle}
       </h2>
 
     </div>
@@ -570,9 +622,11 @@ function Workspace() {
 
       <textarea
         rows={2}
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
         placeholder="Describe the interface you want to create..."
         className="w-full resize-none bg-transparent text-[15px] leading-7 text-white outline-none placeholder:text-slate-500"
-      />
+        />
 
       <div className="mt-3 flex items-center gap-3">
 
@@ -594,10 +648,11 @@ function Workspace() {
 
     {/* Generate */}
 
-    <button className="rounded-2xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] px-8 py-4 font-semibold text-white shadow-[0_0_30px_rgba(124,58,237,.35)] transition hover:brightness-110">
-
-      Generate →
-
+    <button
+    onClick={handleGenerate}
+    className="rounded-2xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] px-8 py-4 font-semibold text-white shadow-[0_0_30px_rgba(124,58,237,.35)] transition hover:brightness-110"
+    >
+    {isGenerating ? "Generating..." : "Generate →"}
     </button>
 
   </div>
