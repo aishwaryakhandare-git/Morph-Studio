@@ -20,6 +20,15 @@ import {
   Download,
 } from "lucide-react";
 
+import {
+  Bot,
+  Lock,
+  Pencil,
+  Code2,
+  LayoutGrid,
+  Users,
+} from "lucide-react";
+
 function Landing() {
   return (
     <div className="min-h-screen bg-[#070B1A] text-white">
