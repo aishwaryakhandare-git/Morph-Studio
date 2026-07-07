@@ -371,12 +371,170 @@ function Workspace() {
 </section>
 
         {/* ================================================= */}
-        {/* LIVE PREVIEW */}
-        {/* ================================================= */}
+{/* LIVE PREVIEW */}
+{/* ================================================= */}
 
-        <section className="bg-[#0A0F1D]">
+<section className="flex flex-col bg-[#0A0F1D]">
 
-        </section>
+  {/* ================= Preview Header ================= */}
+
+  <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+
+    <div>
+
+      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-400">
+        LIVE PREVIEW
+      </p>
+
+      <h2 className="mt-2 text-2xl font-bold">
+        Website Preview
+      </h2>
+
+    </div>
+
+    <div className="flex items-center gap-3">
+
+      {["Desktop", "Tablet", "Mobile"].map((device, index) => (
+
+        <button
+          key={device}
+          className={`rounded-xl px-4 py-2 text-sm transition ${
+            index === 0
+              ? "bg-violet-600 text-white"
+              : "border border-white/10 bg-[#13192B] text-slate-400 hover:border-violet-500"
+          }`}
+        >
+          {device}
+        </button>
+
+      ))}
+
+    </div>
+
+  </div>
+
+  {/* ================= Preview Canvas ================= */}
+
+  <div className="flex-1 overflow-auto p-8">
+
+    <div className="mx-auto w-[900px] rounded-[28px] border border-white/10 bg-[#101726] shadow-[0_30px_80px_rgba(0,0,0,.45)]">
+
+      {/* Browser Bar */}
+
+      <div className="flex items-center gap-2 border-b border-white/10 px-6 py-4">
+
+        <div className="h-3 w-3 rounded-full bg-red-400" />
+        <div className="h-3 w-3 rounded-full bg-yellow-400" />
+        <div className="h-3 w-3 rounded-full bg-green-400" />
+
+        <div className="ml-6 flex-1 rounded-lg bg-[#182033] px-4 py-2 text-sm text-slate-500">
+          https://preview.morphstudio.ai
+        </div>
+
+      </div>
+
+      {/* Website */}
+
+      <div className="p-10">
+
+        {/* Navbar */}
+
+        <div className="flex items-center justify-between">
+
+          <div className="text-xl font-bold">
+            SaaSly
+          </div>
+
+          <div className="flex gap-8 text-slate-400">
+
+            <span>Features</span>
+
+            <span>Pricing</span>
+
+            <span>Docs</span>
+
+            <span>Contact</span>
+
+          </div>
+
+        </div>
+
+        {/* Hero */}
+
+        <div className="mt-16">
+
+          <div className="h-5 w-44 rounded-full bg-violet-500/30" />
+
+          <div className="mt-6 h-14 w-[500px] rounded-xl bg-gradient-to-r from-violet-500/30 to-cyan-500/30" />
+
+          <div className="mt-5 h-4 w-[420px] rounded bg-slate-700" />
+
+          <div className="mt-3 h-4 w-[340px] rounded bg-slate-700" />
+
+          <div className="mt-8 flex gap-4">
+
+            <div className="h-12 w-40 rounded-xl bg-violet-600" />
+
+            <div className="h-12 w-36 rounded-xl border border-white/10 bg-[#151C2E]" />
+
+          </div>
+
+        </div>
+
+        {/* Cards */}
+
+        <div className="mt-20 grid grid-cols-3 gap-6">
+
+          {[1,2,3].map((item)=>(
+
+            <div
+              key={item}
+              className="rounded-2xl border border-white/10 bg-[#141B2D] p-6"
+            >
+
+              <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-violet-500/30 to-cyan-500/30" />
+
+              <div className="mt-6 h-5 w-36 rounded bg-slate-600" />
+
+              <div className="mt-5 h-3 w-full rounded bg-slate-700" />
+
+              <div className="mt-3 h-3 w-5/6 rounded bg-slate-700" />
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  {/* ================= Bottom Preview Toolbar ================= */}
+
+  <div className="flex items-center justify-between border-t border-white/10 px-6 py-4">
+
+    <div className="flex items-center gap-3">
+
+      <button className="rounded-xl border border-white/10 bg-[#13192B] px-4 py-2 text-sm hover:border-violet-500">
+        Zoom 100%
+      </button>
+
+      <button className="rounded-xl border border-white/10 bg-[#13192B] px-4 py-2 text-sm hover:border-violet-500">
+        Full Screen
+      </button>
+
+    </div>
+
+    <button className="rounded-xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] px-6 py-2.5 font-medium">
+      Open Preview →
+    </button>
+
+  </div>
+
+</section>
 
       </div>
 
