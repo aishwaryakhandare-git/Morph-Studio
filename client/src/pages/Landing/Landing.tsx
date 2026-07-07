@@ -2,6 +2,18 @@ import { motion } from "framer-motion";
 import screen from "../../assets/screen.png";
 import HeroSwirls from "../../components/landing/Hero/HeroSwirls";
 
+import {
+  LayoutDashboard,
+  FolderOpen,
+  LayoutTemplate,
+  Boxes,
+  Palette,
+  Sparkles,
+  Users,
+  Settings,
+  CreditCard,
+} from "lucide-react";
+
 function Landing() {
   return (
     <div className="min-h-screen bg-[#070B1A] text-white">
