@@ -217,12 +217,158 @@ function Workspace() {
         </aside>
 
         {/* ================================================= */}
-        {/* AI PANEL */}
-        {/* ================================================= */}
+{/* AI PANEL */}
+{/* ================================================= */}
 
-        <section className="border-r border-white/10 bg-[#0E1323]">
+<section className="flex flex-col border-r border-white/10 bg-[#0E1323]">
 
-        </section>
+  {/* Header */}
+
+  <div className="border-b border-white/10 p-6">
+
+    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-400">
+      AI DESIGN ASSISTANT
+    </p>
+
+    <h2 className="mt-2 text-2xl font-bold">
+      What would you like to build?
+    </h2>
+
+    <p className="mt-2 text-sm leading-6 text-slate-400">
+      Describe your interface in natural language and Morph Studio will
+      generate a production-ready UI.
+    </p>
+
+  </div>
+
+  {/* Conversation */}
+
+  <div className="flex-1 overflow-y-auto p-6">
+
+    {/* AI */}
+
+    <div className="mb-8 flex gap-4">
+
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 font-semibold">
+
+        M
+
+      </div>
+
+      <div className="max-w-[310px] rounded-2xl border border-violet-500/20 bg-[#13192B] p-4">
+
+        <p className="leading-7 text-slate-300">
+
+          Welcome to Morph Studio 👋
+
+          <br /><br />
+
+          Tell me what you want to design.
+
+          <br /><br />
+
+          I'll generate layouts, components,
+          color palettes and production-ready
+          React code.
+
+        </p>
+
+      </div>
+
+    </div>
+
+    {/* User */}
+
+    <div className="mb-8 flex justify-end">
+
+      <div className="max-w-[310px] rounded-2xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] p-4">
+
+        <p className="leading-7">
+
+          Create a modern SaaS landing page
+          with pricing, testimonials and dark mode.
+
+        </p>
+
+      </div>
+
+    </div>
+
+    {/* AI Thinking */}
+
+    <div className="flex gap-4">
+
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 font-semibold">
+
+        M
+
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-[#13192B] p-5">
+
+        <p className="mb-4 font-medium text-slate-300">
+
+          Generating your design...
+
+        </p>
+
+        <div className="flex gap-2">
+
+          <span className="h-2 w-2 animate-bounce rounded-full bg-violet-400"></span>
+
+          <span
+            className="h-2 w-2 animate-bounce rounded-full bg-violet-400"
+            style={{ animationDelay: ".2s" }}
+          ></span>
+
+          <span
+            className="h-2 w-2 animate-bounce rounded-full bg-violet-400"
+            style={{ animationDelay: ".4s" }}
+          ></span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  {/* Prompt Suggestions */}
+
+  <div className="border-t border-white/10 p-5">
+
+    <p className="mb-4 text-xs uppercase tracking-[0.28em] text-slate-500">
+
+      QUICK PROMPTS
+
+    </p>
+
+    <div className="flex flex-wrap gap-3">
+
+      {[
+        "Landing Page",
+        "Dashboard",
+        "Portfolio",
+        "Pricing Section",
+        "Login UI",
+        "E-commerce",
+      ].map((item) => (
+
+        <button
+          key={item}
+          className="rounded-xl border border-white/10 bg-[#13192B] px-4 py-2 text-sm text-slate-300 transition hover:border-violet-500"
+        >
+          {item}
+        </button>
+
+      ))}
+
+    </div>
+
+  </div>
+
+</section>
 
         {/* ================================================= */}
         {/* LIVE PREVIEW */}
