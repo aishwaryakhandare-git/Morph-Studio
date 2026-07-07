@@ -13,8 +13,80 @@ function Workspace() {
 
       {/* ================= TOPBAR PLACEHOLDER ================= */}
 
-      <header className="h-[72px] border-b border-white/10 bg-[#0B1020]/95 backdrop-blur-xl">
-      </header>
+      {/* ================= TOP TOOLBAR ================= */}
+
+<header className="flex h-[72px] items-center justify-between border-b border-white/10 bg-[#0B1020]/95 px-8 backdrop-blur-xl">
+
+  {/* Left */}
+
+  <div className="flex items-center gap-8">
+
+    {/* Project */}
+
+    <div>
+
+      <h2 className="text-lg font-semibold">
+        Untitled Project
+      </h2>
+
+      <p className="text-xs text-slate-500">
+        Auto Saved • Just now
+      </p>
+
+    </div>
+
+    {/* Divider */}
+
+    <div className="h-8 w-px bg-white/10" />
+
+    {/* Controls */}
+
+    <div className="flex items-center gap-3">
+
+      {[
+        "Generate",
+        "Modify",
+        "Theme",
+        "Preview",
+        "Export",
+      ].map((item) => (
+
+        <button
+          key={item}
+          className="rounded-xl border border-white/10 bg-[#13192B] px-5 py-2.5 text-sm font-medium text-slate-300 transition hover:border-violet-500 hover:text-white"
+        >
+          {item} ▼
+        </button>
+
+      ))}
+
+    </div>
+
+  </div>
+
+  {/* Right */}
+
+  <div className="flex items-center gap-4">
+
+    {/* Search */}
+
+    <div className="rounded-xl border border-white/10 bg-[#111827] px-4 py-2.5 text-sm text-slate-500">
+
+      ⌘ K &nbsp; Search Commands
+
+    </div>
+
+    {/* Avatar */}
+
+    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500 font-semibold">
+
+      A
+
+    </div>
+
+  </div>
+
+</header>
 
       {/* ================= MAIN WORKSPACE ================= */}
 
