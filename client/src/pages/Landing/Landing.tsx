@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import screen from "../../assets/screen.png";
 import HeroSwirls from "../../components/landing/Hero/HeroSwirls";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   LayoutDashboard,
   FolderOpen,
@@ -35,6 +37,7 @@ import {
 } from "react-icons/fa6";
 
 function Landing() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[#070B1A] text-white">
       {/* ================= NAVBAR ================= */}
@@ -125,8 +128,10 @@ function Landing() {
               </button>
 
               <button
-  className="flex h-[56px] items-center gap-3 rounded-2xl border border-white/10 bg-[#10172A]/70 px-8 text-[16px] font-semibold text-white backdrop-blur-xl transition-all duration-300 hover:border-violet-400"
->
+                onClick={() => navigate("/workspace")}
+                className="group flex h-[56px] items-center gap-4 rounded-2xl border border-violet-500/20 bg-gradient-to-r from-[#5B5EF7] to-[#8B3DFF] px-8 text-[16px] font-semibold text-white shadow-[0_0_25px_rgba(124,58,237,.35)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(124,58,237,.55)]"
+              >
+
   <svg
     width="18"
     height="18"
@@ -899,6 +904,7 @@ function Landing() {
       {/* Center */}
 
       <button
+        onClick={() => navigate("/workspace")}
         className="flex h-[64px] items-center gap-4 rounded-xl bg-gradient-to-r from-[#6B4DFF] to-[#9444FF] px-12 text-[18px] font-semibold text-white shadow-[0_0_40px_rgba(124,58,237,.35)] transition hover:scale-[1.02]"
       >
         Start Building for Free
