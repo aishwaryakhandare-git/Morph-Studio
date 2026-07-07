@@ -593,130 +593,135 @@ function Landing() {
 
 {/* ================= HOW MORPH WORKS ================= */}
 
-<section className="mx-auto mt-32 max-w-[1500px] px-8">
+<section className="mx-auto mt-5 mb-20 max-w-[1450px] px-8">
 
-  <div className="text-center">
+  <div className="mb-10 text-center">
 
-    <p className="mb-4 text-[13px] font-semibold uppercase tracking-[0.35em] text-violet-400">
+    <p className="text-[12px] font-semibold uppercase tracking-[0.38em] text-violet-400">
       HOW MORPH WORKS
     </p>
 
-    <h2 className="text-[42px] font-bold tracking-[-1px] text-white">
+    <h2 className="mt-3 text-[30px] font-bold tracking-[-0.5px] text-white">
       From Intent to Interface in Seconds
     </h2>
 
   </div>
 
-  <div className="mt-12 flex items-center justify-center">
+  <div className="flex items-center justify-center">
 
     {[
       {
-        no: "1",
+        icon: PenTool,
         title: "Describe",
         desc: "Describe your layout\nin simple text.",
         color: "#22C55E",
-        glow: "shadow-[0_0_35px_rgba(34,197,94,.45)]",
       },
       {
-        no: "2",
+        icon: BrainCircuit,
         title: "Understand",
         desc: "AI reads structure\nand user intent.",
         color: "#3B82F6",
-        glow: "shadow-[0_0_35px_rgba(59,130,246,.45)]",
       },
       {
-        no: "3",
+        icon: Sparkles,
         title: "Generate",
         desc: "Instant UI generation\nwith perfect structure.",
         color: "#A855F7",
-        glow: "shadow-[0_0_35px_rgba(168,85,247,.45)]",
       },
       {
-        no: "4",
+        icon: Download,
         title: "Refine & Export",
-        desc: "Customize, export code\nand ship faster.",
+        desc: "Customize, export code.",
         color: "#F59E0B",
-        glow: "shadow-[0_0_35px_rgba(245,158,11,.45)]",
       },
-    ].map((item, index) => (
+    ].map((item, index) => {
 
-      <div
-        key={item.no}
-        className="flex items-center"
-      >
+      const Icon = item.icon;
 
-        {/* CARD */}
+      return (
 
-        <div className="w-[250px] h-[120px] rounded-[24px] border border-white/10 bg-[#0F1424] px-6 py-5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-violet-500/40">
+        <div
+          key={item.title}
+          className="flex items-center"
+        >
+
+          {/* Card */}
 
           <div
-            className={`mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#141B2D] ${item.glow}`}
-            style={{
-              border: `1px solid ${item.color}30`,
-            }}
+            className="w-[240px] h-[100px] rounded-2xl border border-white/8 bg-[#0F1424] px-6 py-3 backdrop-blur-xl transition hover:border-violet-500/30 flex items-start"
           >
 
-            <span
-              className="text-base font-semibold"
-              style={{
-                color: item.color,
-              }}
-            >
-              {item.no}
-            </span>
+            <div className="flex items-start gap-4">
+
+              <div
+                className="flex h-11 w-11 items-center justify-center rounded-full"
+                style={{
+                  backgroundColor: `${item.color}12`,
+                  boxShadow: `0 0 28px ${item.color}40`,
+                  border: `1px solid ${item.color}30`,
+                }}
+              >
+                <Icon
+                  size={19}
+                  color={item.color}
+                />
+              </div>
+
+              <div>
+
+                <h3
+                  className="whitespace-nowrap text-[18px] font-semibold"
+                  style={{ color: item.color }}
+                >
+                  {item.title}
+                </h3>
+
+                <p className="mt-2 whitespace-pre-line text-[13px] leading-5 text-slate-400">
+                  {item.desc}
+                </p>
+
+              </div>
+
+            </div>
 
           </div>
 
-          <h3
-            className="text-[18px] font-semibold"
-            style={{
-              color: item.color,
-            }}
-          >
-            {item.no} {item.title}
-          </h3>
+          {/* Arrow */}
 
-          <p className="mt-2 whitespace-pre-line text-[14px] leading-6 text-slate-400">
-            {item.desc}
-          </p>
+          {index !== 3 && (
+
+            <div className="mx-5 flex items-center">
+
+              <div className="mr-2 h-px w-7 border-t border-dashed border-violet-500/40" />
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 12H19M19 12L14 7M19 12L14 17"
+                  stroke="#A78BFA"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+
+            </div>
+
+          )}
 
         </div>
 
-        {/* CONNECTOR */}
+      );
 
-        {index !== 3 && (
-
-          <div className="mx-3 flex items-center">
-
-            <div className="w-7 border-t border-dashed border-violet-500/50" />
-
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M5 12H19M19 12L14 7M19 12L14 17"
-                stroke="#9F7AEA"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-
-          </div>
-
-        )}
-
-      </div>
-
-    ))}
+    })}
 
   </div>
 
 </section>
-
       {/* ================= FEATURES ================= */}
       <section className="mx-auto mt-20 max-w-7xl px-8">
         <div className="mb-14 text-center">
@@ -799,7 +804,7 @@ function Landing() {
 
               <h3 className="mt-6 text-2xl font-bold">
                 {title}
-              </h3>
+              </h3>.;
 
               <p className="mt-4 leading-7 text-slate-400">
                 Fast, collaborative and optimized for modern React development.
