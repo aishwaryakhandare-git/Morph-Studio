@@ -368,7 +368,18 @@ function Landing() {
         className="rounded-2xl border border-white/10 bg-[#101528] p-5 transition hover:border-violet-500"
       >
 
-        <div className="mb-5 h-32 rounded-xl bg-gradient-to-br from-[#1A2240] to-[#131A2F]" />
+        <div className="mb-5 flex h-32 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600/20 via-[#171D30] to-cyan-500/20">
+
+  <div className="rounded-xl border border-white/10 bg-[#0F1526] p-5">
+
+    <Sparkles
+      size={34}
+      className="text-violet-400"
+    />
+
+  </div>
+
+</div>
 
         <div className="flex items-center justify-between">
 
