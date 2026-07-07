@@ -732,21 +732,21 @@ function Landing() {
 </section>
 {/* ================= POWERFUL FEATURES ================= */}
 
-<section className="mx-auto mt-28 max-w-[1420px] px-8">
+<section className="mx-auto mt-20 w-[92%] max-w-[1700px]">
 
   <div className="text-center">
 
-    <p className="text-[12px] font-semibold uppercase tracking-[0.35em] text-violet-400">
+    <p className="text-[12px] font-semibold uppercase tracking-[0.32em] text-violet-400">
       POWERFUL FEATURES
     </p>
 
-    <h2 className="mt-3 text-[42px] font-bold tracking-[-0.5px] text-white">
+    <h2 className="mt-2 text-[36px] font-bold tracking-[-0.03em] text-white">
       Everything you need to build better UI
     </h2>
 
   </div>
 
-  <div className="mt-12 flex justify-center gap-5 flex-wrap">
+  <div className="mt-10 grid grid-cols-6 gap-5">
 
     {[
       {
@@ -793,28 +793,29 @@ function Landing() {
 
         <div
           key={feature.title}
-          className="group h-[170px] w-[198px] rounded-[18px] border border-white/8 bg-[#0F1423] p-6 transition-all duration-300 hover:border-violet-500/40 hover:bg-[#11182B]"
+          className="group h-[168px] rounded-[18px] border border-[#22283C] bg-[#0F1323] px-5 pt-3 pb-3 transition-all duration-300 hover:border-violet-500/40"
         >
 
           <div
-            className="flex h-10 w-10 items-center justify-center rounded-xl"
+            className="flex h-11 w-11 items-center justify-center rounded-xl"
             style={{
-              background: `${feature.color}15`,
+              background: `${feature.color}12`,
               border: `1px solid ${feature.color}30`,
-              boxShadow: `0 0 20px ${feature.color}25`,
+              boxShadow: `0 0 18px ${feature.color}20`,
             }}
           >
             <Icon
               size={18}
               color={feature.color}
+              strokeWidth={2.2}
             />
           </div>
 
-          <h3 className="mt-6 text-[18px] font-semibold text-white leading-6">
+          <h3 className="mt-5 text-[18px] font-semibold leading-none text-white">
             {feature.title}
           </h3>
 
-          <p className="mt-3 whitespace-pre-line text-[14px] leading-6 text-slate-400">
+          <p className="mt-4 whitespace-pre-line text-[14px] leading-6 text-[#8C96AF]">
             {feature.desc}
           </p>
 
@@ -828,30 +829,95 @@ function Landing() {
 
 </section>
 
-      {/* ================= CTA ================= */}
-      <section className="mx-auto mt-32 max-w-7xl px-8">
-        <div className="rounded-[36px] border border-white/10 bg-gradient-to-br from-violet-700/20 to-cyan-600/10 p-16 text-center backdrop-blur-xl">
-          <h2 className="text-5xl font-black">
-            Ready to Build with Morph Studio?
-          </h2>
+      {/* ================= CTA BANNER ================= */}
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            Turn natural language into beautiful production-ready interfaces.
-            Design faster, iterate visually and export clean React code.
-          </p>
+<section className="mx-auto mt-8 w-[96%] max-w-[1700px]">
 
-          <div className="mt-10 flex justify-center gap-4">
-            <button className="rounded-xl bg-violet-600 px-8 py-4 font-semibold">
-              Start Free
-            </button>
+  <div className="relative overflow-hidden rounded-[18px] border border-violet-500/20 bg-gradient-to-r from-[#24124D] via-[#30145F] to-[#24124D] px-16 py-10">
 
-            <button className="rounded-xl border border-white/10 bg-white/5 px-8 py-4">
-              Book Demo
-            </button>
-          </div>
-        </div>
-      </section>
+    {/* Background Glow */}
+    <div className="absolute -left-20 top-0 h-[300px] w-[300px] rounded-full bg-violet-600/20 blur-[120px]" />
 
+    <div className="absolute right-20 bottom-0 h-[250px] w-[250px] rounded-full bg-fuchsia-500/20 blur-[100px]" />
+
+    {/* Wave */}
+    <div className="absolute right-0 bottom-0 h-full w-[45%] opacity-30">
+
+      <svg
+        viewBox="0 0 700 260"
+        className="h-full w-full"
+        fill="none"
+      >
+
+        <path
+          d="M0 170 C120 110 200 220 320 160 S520 80 700 150"
+          stroke="#6D4AFF"
+          strokeWidth="1.5"
+        />
+
+        <path
+          d="M0 185 C120 125 200 235 320 175 S520 95 700 165"
+          stroke="#8B5CF6"
+          strokeWidth="1.3"
+          opacity=".8"
+        />
+
+        <path
+          d="M0 200 C120 140 200 250 320 190 S520 110 700 180"
+          stroke="#38BDF8"
+          strokeWidth="1.2"
+          opacity=".7"
+        />
+
+      </svg>
+
+    </div>
+
+    <div className="relative z-10 flex items-center justify-between">
+
+      {/* Left */}
+
+      <div className="max-w-[380px]">
+
+        <h2 className="text-[40px] font-bold leading-tight text-white">
+          Ready to build the future?
+        </h2>
+
+        <p className="mt-4 text-[18px] leading-8 text-slate-300">
+          Join thousands of designers and developers building
+          better products with Morph Studio.
+        </p>
+
+      </div>
+
+      {/* Center */}
+
+      <button
+        className="flex h-[64px] items-center gap-4 rounded-xl bg-gradient-to-r from-[#6B4DFF] to-[#9444FF] px-12 text-[18px] font-semibold text-white shadow-[0_0_40px_rgba(124,58,237,.35)] transition hover:scale-[1.02]"
+      >
+        Start Building for Free
+        <span className="text-xl">→</span>
+      </button>
+
+      {/* Right */}
+
+      <div className="relative w-[320px]">
+
+        <img
+          src={screen}
+          alt="Preview"
+          className="rounded-xl opacity-90"
+        />
+
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-transparent to-[#2E135B]/60" />
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
       {/* ================= FOOTER ================= */}
       <footer className="mx-auto mt-32 max-w-7xl border-t border-white/10 px-8 py-14">
         <div className="grid gap-10 md:grid-cols-4">
