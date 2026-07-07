@@ -365,7 +365,7 @@ function Landing() {
 
       <div
         key={project.name}
-        className="rounded-2xl border border-white/10 bg-[#101528] p-5 transition hover:border-violet-500"
+        className="group rounded-2xl border border-white/10 bg-[#101528] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-violet-500 hover:shadow-[0_15px_35px_rgba(139,92,246,.25)]"
       >
 
         <div className="mb-5 flex h-32 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600/20 via-[#171D30] to-cyan-500/20">
