@@ -421,11 +421,94 @@ function Landing() {
 
       {/* ================= RIGHT PANEL ================= */}
 
-      <div className="rounded-2xl border border-dashed border-slate-700 flex items-center justify-center text-slate-500">
+<div className="space-y-6">
 
-        Activity Panel
+  {/* Workspace Activity */}
 
+  <div className="rounded-2xl border border-white/10 bg-[#101528] p-5">
+
+    <h3 className="mb-5 text-lg font-semibold">
+      Workspace Activity
+    </h3>
+
+    {[
+      ["Generated Landing Page", "2 min ago"],
+      ["Edited Hero Section", "8 min ago"],
+      ["Exported React Code", "35 min ago"],
+      ["Saved Pricing Component", "1 hr ago"],
+      ["Created New Project", "Yesterday"],
+    ].map(([title, time]) => (
+      <div
+        key={title}
+        className="mb-4 flex items-start justify-between last:mb-0"
+      >
+        <div>
+          <p className="text-sm font-medium text-white">
+            {title}
+          </p>
+
+          <p className="mt-1 text-xs text-slate-500">
+            {time}
+          </p>
+        </div>
+
+        <div className="mt-1 h-2 w-2 rounded-full bg-violet-500" />
       </div>
+    ))}
+
+  </div>
+
+  {/* Prompt History */}
+
+  <div className="rounded-2xl border border-white/10 bg-[#101528] p-5">
+
+    <h3 className="mb-5 text-lg font-semibold">
+      Recent Prompts
+    </h3>
+
+    {[
+      "Modern SaaS Landing Page",
+      "Glassmorphism Login UI",
+      "Analytics Dashboard",
+      "Pricing Section",
+    ].map((prompt) => (
+      <button
+        key={prompt}
+        className="mb-3 w-full rounded-xl border border-white/10 bg-[#0B1020] p-3 text-left text-sm text-slate-300 transition hover:border-violet-500"
+      >
+        {prompt}
+      </button>
+    ))}
+
+  </div>
+
+  {/* Quick Actions */}
+
+  <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-violet-600/20 to-cyan-500/10 p-5">
+
+    <h3 className="mb-5 text-lg font-semibold">
+      Quick Actions
+    </h3>
+
+    <div className="space-y-3">
+
+      <button className="w-full rounded-xl bg-violet-600 py-3 font-medium transition hover:brightness-110">
+        Generate Hero
+      </button>
+
+      <button className="w-full rounded-xl border border-white/10 bg-[#101528] py-3 transition hover:border-violet-500">
+        Generate Dashboard
+      </button>
+
+      <button className="w-full rounded-xl border border-white/10 bg-[#101528] py-3 transition hover:border-violet-500">
+        Generate Pricing
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
     </div>
 
