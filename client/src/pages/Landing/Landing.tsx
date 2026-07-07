@@ -370,14 +370,39 @@ function Landing() {
 
         <div className="mb-5 flex h-32 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600/20 via-[#171D30] to-cyan-500/20">
 
-  <div className="rounded-xl border border-white/10 bg-[#0F1526] p-5">
+  <div className="w-full rounded-xl border border-white/10 bg-[#0F1526] p-4">
 
-    <Sparkles
-      size={34}
-      className="text-violet-400"
-    />
+  {/* Browser Bar */}
+
+  <div className="mb-4 flex items-center gap-2">
+
+    <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+
+    <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+
+    <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
 
   </div>
+
+  {/* Hero */}
+
+  <div className="h-6 w-3/4 rounded bg-violet-500/30" />
+
+  <div className="mt-3 h-3 w-full rounded bg-slate-700" />
+
+  <div className="mt-2 h-3 w-2/3 rounded bg-slate-700" />
+
+  {/* Cards */}
+
+  <div className="mt-5 grid grid-cols-2 gap-2">
+
+    <div className="h-12 rounded bg-violet-500/20" />
+
+    <div className="h-12 rounded bg-cyan-500/20" />
+
+  </div>
+
+</div>
 
 </div>
 
