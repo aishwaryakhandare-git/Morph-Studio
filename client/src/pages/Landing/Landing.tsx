@@ -1076,7 +1076,7 @@ function Landing() {
   <div className="mt-12 flex items-center justify-between border-t border-white/10 pt-8 text-sm text-slate-500">
 
     <p>
-      © 2026 Morph Studio. All rights reserved.
+      © 2026 Morph Studio.
     </p>
 
     <div className="flex gap-8">
