@@ -24,7 +24,7 @@ const [isGenerating, setIsGenerating] = useState(false);
 
 const [previewTitle, setPreviewTitle] = useState("Website Preview");
 
-const [sidebarOpen, setSidebarOpen] = useState(true);
+const [sidebarOpen, setSidebarOpen] = useState(false);
 
 const handleGenerate = () => {
 
@@ -140,7 +140,7 @@ const handleGenerate = () => {
 
     {/* Avatar */}
 
-    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500 font-semibold">
+    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500 font-semibold">
 
       A
 
@@ -177,7 +177,7 @@ const handleGenerate = () => {
 
           <div className="flex h-[72px] items-center border-b border-white/10 px-6">
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-500/30 bg-gradient-to-br from-[#24124D] to-[#5A31F4]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-violet-500/30 bg-gradient-to-br from-[#24124D] to-[#5A31F4]">
                 <span className="font-bold text-violet-300">M</span>
             </div>
 
@@ -199,19 +199,19 @@ const handleGenerate = () => {
 
           <div className="p-5">
 
-            <button className={`flex items-center rounded-xl bg-gradient-to-r
-            from-[#6D4AFF] to-[#8F3FFF] py-3 font-semibold
-            transition hover:brightness-110
-            ${
-            sidebarOpen
-                ? "w-full justify-center gap-2"
-                : "h-12 w-12 justify-center mx-auto"
-            }`}>
-
+            <button
+              className={`flex items-center rounded-xl
+              bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF]
+              transition
+              ${
+                sidebarOpen
+                  ? "w-full justify-center gap-2 py-3"
+                  : "mx-auto h-10 w-10 justify-center"
+              }`}
+            >
               <Plus size={18} />
 
               {sidebarOpen && "New Project"}
-
             </button>
 
           </div>
