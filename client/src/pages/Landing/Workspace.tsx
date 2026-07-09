@@ -15,8 +15,10 @@ function Workspace() {
 
 const [messages, setMessages] = useState([
   {
+    id: 1,
     sender: "ai",
-    text: "Welcome to Morph Studio 👋 Describe the interface you'd like to build.",
+    text:
+      "Welcome to Morph Studio 👋\n\nDescribe the interface you'd like to build.\n\nI'll generate layouts, components, color palettes and production-ready React code.",
   },
 ]);
 
@@ -27,40 +29,38 @@ const [previewTitle, setPreviewTitle] = useState("Website Preview");
 const [sidebarOpen, setSidebarOpen] = useState(false);
 
 const handleGenerate = () => {
+  if (!prompt.trim() || isGenerating) return;
 
-  if (!prompt.trim()) return;
-
-  const userPrompt = prompt;
+  const userPrompt = prompt.trim();
 
   setMessages((prev) => [
     ...prev,
     {
+      id: Date.now(),
       sender: "user",
       text: userPrompt,
     },
   ]);
+
+  setPreviewTitle(userPrompt);
 
   setPrompt("");
 
   setIsGenerating(true);
 
   setTimeout(() => {
-
     setMessages((prev) => [
       ...prev,
       {
+        id: Date.now() + 1,
         sender: "ai",
         text:
-          "I've generated a modern layout based on your prompt. You can now modify the design, switch themes or export the code.",
+          "Your interface has been generated successfully.\n\nYou can now refine the layout, switch themes, modify sections or export the generated code.",
       },
     ]);
 
-    setPreviewTitle(userPrompt);
-
     setIsGenerating(false);
-
   }, 1800);
-
 };
 
   return (
@@ -323,6 +323,69 @@ const handleGenerate = () => {
   {/* Conversation */}
 
   <div className="flex-1 overflow-y-auto p-6">
+  
+  {messages.map((message) => (
+  <div
+    key={message.id}
+    className={`mb-8 flex ${
+      message.sender === "user"
+        ? "justify-end"
+        : "justify-start gap-4"
+    }`}
+  >
+    {message.sender === "ai" && (
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 font-semibold">
+        M
+      </div>
+    )}
+
+    <div
+      className={`max-w-[330px] rounded-2xl p-5 ${
+        message.sender === "ai"
+          ? "border border-violet-500/20 bg-[#13192B]"
+          : "bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF]"
+      }`}
+    >
+      <p className="whitespace-pre-line leading-7 text-slate-200">
+        {message.text}
+      </p>
+    </div>
+  </div>
+))}
+
+{isGenerating && (
+  <div className="flex gap-4">
+
+    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 font-semibold">
+      M
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-[#13192B] p-5">
+
+      <p className="mb-4 font-medium text-slate-300">
+        Generating your design...
+      </p>
+
+      <div className="flex gap-2">
+
+        <span className="h-2 w-2 animate-bounce rounded-full bg-violet-400"></span>
+
+        <span
+          className="h-2 w-2 animate-bounce rounded-full bg-violet-400"
+          style={{ animationDelay: ".2s" }}
+        ></span>
+
+        <span
+          className="h-2 w-2 animate-bounce rounded-full bg-violet-400"
+          style={{ animationDelay: ".4s" }}
+        ></span>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
 
     {/* AI */}
 
@@ -683,6 +746,7 @@ const handleGenerate = () => {
 
     <button
     onClick={handleGenerate}
+    disabled={isGenerating}
     className="rounded-2xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] px-8 py-4 font-semibold text-white shadow-[0_0_30px_rgba(124,58,237,.35)] transition hover:brightness-110"
     >
     {isGenerating ? "Generating..." : "Generate →"}
