@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import {
   FolderOpen,
@@ -25,6 +25,8 @@ const [messages, setMessages] = useState([
 const [isGenerating, setIsGenerating] = useState(false);
 
 const [previewTitle, setPreviewTitle] = useState("Website Preview");
+
+const messagesEndRef = useRef<HTMLDivElement>(null);
 
 const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -107,6 +109,12 @@ const handleQuickPrompt = (text: string) => {
     handleGenerateFromPrompt(text);
   }, 100);
 };
+
+useEffect(() => {
+  messagesEndRef.current?.scrollIntoView({
+    behavior: "smooth",
+  });
+}, [messages, isGenerating]);
 
   return (
     <div className="h-screen overflow-hidden bg-[#070B1A] text-white">
@@ -432,6 +440,9 @@ const handleQuickPrompt = (text: string) => {
   </div>
 )}
 
+</div>
+
+<div ref={messagesEndRef} />
 
   {/* Prompt Suggestions */}
 
