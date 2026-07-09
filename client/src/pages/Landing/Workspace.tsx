@@ -689,9 +689,15 @@ useEffect(() => {
         rows={2}
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleGenerate();
+          }
+        }}
         placeholder="Describe the interface you want to create..."
         className="w-full resize-none bg-transparent text-[15px] leading-7 text-white outline-none placeholder:text-slate-500"
-        />
+      />
 
       <div className="mt-3 flex items-center gap-3">
 
