@@ -63,12 +63,7 @@ const handleGenerate = () => {
   }, 1800);
 };
 
-const handleQuickPrompt = (text: string) => {
-  if (isGenerating) return;
-
-  setPrompt(text);
-
-  const handleGenerateFromPrompt = (userPrompt: string) => {
+const handleGenerateFromPrompt = (userPrompt: string) => {
 
   setMessages((prev) => [
     ...prev,
@@ -102,6 +97,11 @@ const handleQuickPrompt = (text: string) => {
   }, 1800);
 
 };
+
+const handleQuickPrompt = (text: string) => {
+  if (isGenerating) return;
+
+  setPrompt(text);
 
   setTimeout(() => {
     handleGenerateFromPrompt(text);
