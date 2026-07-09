@@ -117,7 +117,7 @@ useEffect(() => {
 }, [messages, isGenerating]);
 
   return (
-    <div className="h-screen overflow-hidden bg-[#070B1A] text-white">
+    <div className="flex h-screen flex-col bg-[#070B1A] text-white">
 
       {/* ================= TOPBAR PLACEHOLDER ================= */}
 
@@ -206,7 +206,8 @@ useEffect(() => {
       {/* ================= MAIN WORKSPACE ================= */}
 
       <div
-        className="grid h-[calc(100vh-72px)] transition-all duration-300"
+        <div
+className="grid flex-1 transition-all duration-300"
         style={{
         gridTemplateColumns: sidebarOpen
             ? "260px 430px 1fr"
@@ -654,7 +655,6 @@ useEffect(() => {
 
 </section>
 
-      </div>
 
 {/* ================================================= */}
 {/* AI PROMPT BAR */}
@@ -731,7 +731,7 @@ useEffect(() => {
   </div>
 
 </div>
-
+</div>
 </div>
   );
 }
