@@ -63,6 +63,10 @@ const handleGenerate = () => {
   }, 1800);
 };
 
+const handleQuickPrompt = (text: string) => {
+  setPrompt(text);
+};
+
   return (
     <div className="h-screen overflow-hidden bg-[#070B1A] text-white">
 
@@ -409,12 +413,13 @@ const handleGenerate = () => {
         "E-commerce",
       ].map((item) => (
 
-        <button
-          key={item}
-          className="rounded-xl border border-white/10 bg-[#13192B] px-4 py-2 text-sm text-slate-300 transition hover:border-violet-500"
-        >
-          {item}
-        </button>
+  <button
+  key={item}
+  onClick={() => handleQuickPrompt(item)}
+  className="rounded-xl border border-white/10 bg-[#13192B] px-4 py-2 text-sm text-slate-300 transition hover:border-violet-500 hover:bg-violet-500/10"
+>
+  {item}
+</button>
 
       ))}
 
