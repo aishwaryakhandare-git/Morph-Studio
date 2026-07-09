@@ -64,7 +64,48 @@ const handleGenerate = () => {
 };
 
 const handleQuickPrompt = (text: string) => {
+  if (isGenerating) return;
+
   setPrompt(text);
+
+  const handleGenerateFromPrompt = (userPrompt: string) => {
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      id: Date.now(),
+      sender: "user",
+      text: userPrompt,
+    },
+  ]);
+
+  setPreviewTitle(userPrompt);
+
+  setPrompt("");
+
+  setIsGenerating(true);
+
+  setTimeout(() => {
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now() + 1,
+        sender: "ai",
+        text:
+          "Your interface has been generated successfully.\n\nYou can now refine the layout, switch themes or export the generated code.",
+      },
+    ]);
+
+    setIsGenerating(false);
+
+  }, 1800);
+
+};
+
+  setTimeout(() => {
+    handleGenerateFromPrompt(text);
+  }, 100);
 };
 
   return (
