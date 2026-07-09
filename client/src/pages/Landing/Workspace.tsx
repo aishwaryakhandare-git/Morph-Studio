@@ -387,7 +387,6 @@ const handleGenerate = () => {
   </div>
 )}
 
-    {/* AI */}
 
     <div className="mb-8 flex gap-4">
 
@@ -419,8 +418,6 @@ const handleGenerate = () => {
 
     </div>
 
-    {/* User */}
-
     <div className="mb-8 flex justify-end">
 
       <div className="max-w-[310px] rounded-2xl bg-gradient-to-r from-[#6D4AFF] to-[#8F3FFF] p-4">
@@ -435,8 +432,6 @@ const handleGenerate = () => {
       </div>
 
     </div>
-
-    {/* AI Thinking */}
 
     <div className="flex gap-4">
 
