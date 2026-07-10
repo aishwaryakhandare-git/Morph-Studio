@@ -1,163 +1,226 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-from openai import OpenAI
-from dotenv import load_dotenv
-
-import os
 import json
+import os
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from typing import Any
 
-load_dotenv()
 
-app = Flask(__name__)
-CORS(app)
-
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+PORT = int(os.environ.get("MORPH_BACKEND_PORT", "8000"))
+MODEL = os.environ.get("OPENAI_MODEL", "gpt-4.1-mini")
 
 
 SYSTEM_PROMPT = """
-You are Morph Studio AI.
-
-You are an expert UI/UX designer and senior frontend engineer.
-
-The user will describe an interface.
-
-Return ONLY valid JSON.
-
-Format:
-
+You are Morph Studio, an AI UI builder.
+Return only JSON for a generated frontend concept.
+The JSON shape must be:
 {
-    "reply":"",
-    "title":"",
-    "description":"",
-    "type":"",
-    "sections":[]
+  "title": "short page title",
+  "description": "one sentence",
+  "type": "landing|dashboard|portfolio|login|pricing|ecommerce|default",
+  "theme": "dark|light",
+  "accentColors": ["#hex", "#hex", "#hex"],
+  "page": {
+    "navItems": ["Work", "Skills", "About", "Contact"],
+    "eyebrow": "short label",
+    "heroTitle": "large hero headline",
+    "heroSubtitle": "hero paragraph",
+    "primaryCta": "button label",
+    "secondaryCta": "button label",
+    "cards": [
+      {"title": "card title", "description": "card description", "meta": "short meta"}
+    ],
+    "skills": ["React", "TypeScript", "Tailwind"],
+    "contactCta": "short closing call to action"
+  },
+  "assistantMessage": "brief helpful response"
 }
-
-Rules
-
-type must be one of
-
-landing
-dashboard
-portfolio
-login
-pricing
-ecommerce
-
-reply should explain what you designed.
-
-title should be short.
-
-description should describe the generated interface.
-
-sections should be an array.
-
-Example
-
-{
-"title":"Finance Dashboard",
-"description":"Analytics dashboard for fintech.",
-"type":"dashboard",
-"reply":"I designed a finance dashboard with KPI cards and charts.",
-"sections":[
-"Navbar",
-"Sidebar",
-"KPI Cards",
-"Revenue Chart",
-"Transactions",
-"Users"
-]
-}
+Understand user intent. If the user asks for a light theme, set theme to light.
+If they ask for bright colors, use vivid accent hex colors.
 """
 
 
-@app.route("/api/health", methods=["GET"])
-def health():
+def infer_type(prompt: str) -> str:
+    value = prompt.lower()
+    if any(word in value for word in ["dashboard", "analytics", "admin"]):
+        return "dashboard"
+    if any(word in value for word in ["portfolio", "developer", "personal site", "case study"]):
+        return "portfolio"
+    if any(word in value for word in ["login", "signin", "sign in", "auth"]):
+        return "login"
+    if any(word in value for word in ["pricing", "plans", "subscription"]):
+        return "pricing"
+    if any(word in value for word in ["ecommerce", "e-commerce", "shop", "store"]):
+        return "ecommerce"
+    if any(word in value for word in ["landing", "homepage", "hero", "startup"]):
+        return "landing"
+    return "default"
 
-    return jsonify({
-        "status": "online",
-        "message": "Morph Studio Backend Running"
-    })
+
+def fallback_design(prompt: str) -> dict[str, Any]:
+    preview_type = infer_type(prompt)
+    wants_light = "light" in prompt.lower() or "bright" in prompt.lower()
+    titles = {
+        "portfolio": "Bright Web Developer Portfolio",
+        "dashboard": "AI Analytics Dashboard",
+        "login": "Secure Login Experience",
+        "pricing": "SaaS Pricing Section",
+        "ecommerce": "Premium Commerce Store",
+        "landing": "Launch Landing Page",
+        "default": "Modern Product Website",
+    }
+    descriptions = {
+        "portfolio": "A complete developer portfolio with a bold hero, project grid, skills, services, testimonials, and contact CTA.",
+        "dashboard": "A dense operating dashboard with metrics, charts, tables, and daily workflow controls.",
+        "login": "A focused authentication flow with polished inputs, account recovery, and sign in controls.",
+        "pricing": "Conversion-focused pricing cards with feature comparison and a high-contrast CTA.",
+        "ecommerce": "A modern storefront with merchandising, product cards, categories, and purchase CTAs.",
+        "landing": "A crisp landing page with a hero, navigation, action buttons, and feature cards.",
+        "default": "A clean AI-generated interface with hero content, feature modules, and polished conversion areas.",
+    }
+    page = {
+        "navItems": ["Work", "Skills", "About", "Contact"],
+        "eyebrow": "Available for frontend projects",
+        "heroTitle": "I build fast, colorful web experiences.",
+        "heroSubtitle": "Frontend developer specializing in React, TypeScript, Tailwind CSS, AI interfaces, performance, and polished product experiences.",
+        "primaryCta": "View projects",
+        "secondaryCta": "Contact me",
+        "cards": [
+            {"title": "AI SaaS Dashboard", "description": "A responsive analytics product with charts, command menus, and workflow automation.", "meta": "React / TypeScript"},
+            {"title": "Bright Commerce UI", "description": "A vivid storefront with product storytelling, filters, and conversion-focused cards.", "meta": "Tailwind / UX"},
+            {"title": "Developer Blog System", "description": "A fast publishing experience with tags, MDX-ready layouts, and clean reading surfaces.", "meta": "Next.js / Content"},
+        ],
+        "skills": ["React", "TypeScript", "Tailwind CSS", "Next.js", "Framer Motion", "API Integration", "AI UI", "Accessibility"],
+        "contactCta": "Have a product idea? Let us turn it into a polished, production-ready web experience.",
+    }
+    if preview_type != "portfolio":
+        page = {
+            "navItems": ["Product", "Solutions", "Pricing", "Contact"],
+            "eyebrow": "Generated by Morph Studio",
+            "heroTitle": titles[preview_type],
+            "heroSubtitle": descriptions[preview_type],
+            "primaryCta": "Get started",
+            "secondaryCta": "View demo",
+            "cards": [
+                {"title": "Adaptive layout", "description": "Responsive sections tuned to the prompt and selected device.", "meta": "Layout"},
+                {"title": "Modern styling", "description": "Premium spacing, color, and interaction states generated from intent.", "meta": "Design"},
+                {"title": "Ready to refine", "description": "Use the prompt bar to iterate sections, copy, and visual direction.", "meta": "AI"},
+            ],
+            "skills": ["React", "TypeScript", "Tailwind CSS", "Responsive UI"],
+            "contactCta": "Refine this concept with another prompt.",
+        }
+
+    return {
+        "title": titles[preview_type],
+        "description": descriptions[preview_type],
+        "type": preview_type,
+        "theme": "light" if wants_light else "dark",
+        "accentColors": ["#7C3AED", "#EC4899", "#06B6D4"] if wants_light else ["#7C3AED", "#D946EF", "#22D3EE"],
+        "page": page,
+        "assistantMessage": (
+            "I generated a full light-theme developer portfolio concept with bright accent colors, "
+            "project sections, skills, and a contact-focused structure."
+            if preview_type == "portfolio" and wants_light
+            else "I generated a structured Morph Studio preview from your prompt."
+        ),
+    }
 
 
-@app.route("/api/generate", methods=["POST"])
-def generate():
+def call_openai(prompt: str) -> dict[str, Any]:
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        return fallback_design(prompt)
+
+    payload = {
+        "model": MODEL,
+        "input": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ],
+        "text": {"format": {"type": "json_object"}},
+    }
+    request = urllib.request.Request(
+        "https://api.openai.com/v1/responses",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
 
     try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+        return fallback_design(prompt)
 
-        body = request.get_json()
+    output_text = ""
+    for item in data.get("output", []):
+        for content in item.get("content", []):
+            if content.get("type") == "output_text":
+                output_text += content.get("text", "")
 
-        if body is None:
+    try:
+        generated = json.loads(output_text)
+    except json.JSONDecodeError:
+        return fallback_design(prompt)
 
-            return jsonify({
-                "success": False,
-                "message": "No JSON received"
-            }), 400
-
-        prompt = body.get("prompt", "").strip()
-
-        if prompt == "":
-
-            return jsonify({
-                "success": False,
-                "message": "Prompt is required"
-            }), 400
-
-        response = client.chat.completions.create(
-
-            model="gpt-5.5",
-
-            messages=[
-
-                {
-                    "role": "system",
-                    "content": SYSTEM_PROMPT
-                },
-
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-
-            ],
-
-            response_format={
-                "type": "json_object"
-            }
-
-        )
-
-        content = response.choices[0].message.content
-
-        data = json.loads(content)
-
-        return jsonify({
-
-            "success": True,
-
-            "reply": data["reply"],
-
-            "title": data["title"],
-
-            "description": data["description"],
-
-            "type": data["type"],
-
-            "sections": data["sections"]
-
-        })
-
-    except Exception as e:
-
-        return jsonify({
-
-            "success": False,
-
-            "message": str(e)
-
-        }), 500
+    fallback = fallback_design(prompt)
+    return {
+        "title": generated.get("title") or fallback["title"],
+        "description": generated.get("description") or fallback["description"],
+        "type": generated.get("type") if generated.get("type") in {"landing", "dashboard", "portfolio", "login", "pricing", "ecommerce", "default"} else fallback["type"],
+        "theme": generated.get("theme") if generated.get("theme") in {"dark", "light"} else fallback["theme"],
+        "accentColors": generated.get("accentColors") if isinstance(generated.get("accentColors"), list) else fallback["accentColors"],
+        "page": generated.get("page") if isinstance(generated.get("page"), dict) else fallback["page"],
+        "assistantMessage": generated.get("assistantMessage") or fallback["assistantMessage"],
+    }
 
 
-        
+class MorphHandler(BaseHTTPRequestHandler):
+    def send_json(self, status: int, payload: dict[str, Any]) -> None:
+        body = json.dumps(payload).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_OPTIONS(self) -> None:
+        self.send_json(204, {})
+
+    def do_GET(self) -> None:
+        if self.path == "/health":
+            self.send_json(200, {"ok": True, "model": MODEL, "hasApiKey": bool(os.environ.get("OPENAI_API_KEY"))})
+            return
+        self.send_json(404, {"error": "Not found"})
+
+    def do_POST(self) -> None:
+        if self.path != "/api/generate":
+            self.send_json(404, {"error": "Not found"})
+            return
+
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            body = json.loads(self.rfile.read(length).decode("utf-8"))
+            prompt = str(body.get("prompt", "")).strip()
+        except (ValueError, json.JSONDecodeError):
+            self.send_json(400, {"error": "Invalid JSON"})
+            return
+
+        if not prompt:
+            self.send_json(400, {"error": "Prompt is required"})
+            return
+
+        self.send_json(200, call_openai(prompt))
+
+
+if __name__ == "__main__":
+    server = ThreadingHTTPServer(("127.0.0.1", PORT), MorphHandler)
+    print(f"Morph backend running on http://127.0.0.1:{PORT}")
+    print("Set OPENAI_API_KEY for real AI generation. Without it, smart fallback generation is used.")
+    server.serve_forever()
