@@ -78,85 +78,6 @@ const initialMessages: Message[] = [
   },
 ];
 
-// Prompt understanding and AI response copy
-const getPreviewCopy = (rawPrompt: string): PreviewCopy => {
-  const value = rawPrompt.toLowerCase();
-
-  if (value.includes("dashboard") || value.includes("analytics") || value.includes("admin")) {
-    return {
-      title: "AI Analytics Dashboard",
-      description: "A dense operating dashboard with metrics, charts, tasks, and customer activity.",
-      type: "dashboard",
-    };
-  }
-
-  if (value.includes("login") || value.includes("signin") || value.includes("sign in") || value.includes("auth")) {
-    return {
-      title: "Secure Login Experience",
-      description: "A focused authentication flow with polished inputs, account recovery, and sign in controls.",
-      type: "login",
-    };
-  }
-
-  if (value.includes("portfolio") || value.includes("case study") || value.includes("personal")) {
-    return {
-      title: "Creative Portfolio",
-      description: "A refined portfolio with a strong hero, project grid, profile section, skills, and contact CTA.",
-      type: "portfolio",
-    };
-  }
-
-  if (value.includes("pricing") || value.includes("plans") || value.includes("subscription")) {
-    return {
-      title: "SaaS Pricing Section",
-      description: "Conversion-focused pricing cards with feature comparison and a high-contrast CTA.",
-      type: "pricing",
-    };
-  }
-
-  if (value.includes("ecommerce") || value.includes("e-commerce") || value.includes("shop") || value.includes("store")) {
-    return {
-      title: "Premium Commerce Store",
-      description: "A modern storefront with product merchandising, filters, featured items, and purchase CTAs.",
-      type: "ecommerce",
-    };
-  }
-
-  if (value.includes("landing") || value.includes("homepage") || value.includes("hero") || value.includes("startup")) {
-    return {
-      title: "Launch Landing Page",
-      description: "A crisp landing page with a hero, navigation, action buttons, and feature cards.",
-      type: "landing",
-    };
-  }
-
-  return {
-    title: "Modern Product Website",
-    description: "A clean AI-generated interface with hero content, feature modules, and polished conversion areas.",
-    type: "default",
-  };
-};
-
-const getAssistantReply = (copy: PreviewCopy): string => {
-  const responses: Record<PreviewType, string> = {
-    landing:
-      "I built a premium landing-page direction with a sharp hero, compact navigation, dual CTAs, and feature cards that can support a strong product launch.",
-    dashboard:
-      "I transformed the preview into an operating dashboard with KPI cards, chart modules, a table, and a left navigation rhythm suited for repeated daily use.",
-    portfolio:
-      "I shaped this into a polished portfolio with a bold opening statement, project cards, skill chips, and a simple contact section for conversion.",
-    login:
-      "I generated a refined login experience with a centered auth card, clear inputs, recovery flow, remember-me control, and a confident primary action.",
-    pricing:
-      "I composed a pricing section with three plan cards, visible feature hierarchy, a highlighted recommended tier, and a direct call to action.",
-    ecommerce:
-      "I created a premium storefront preview with merchandising blocks, product cards, category controls, and purchase-focused calls to action.",
-    default:
-      "I drafted a modern product interface with a flexible hero, feature panels, proof points, and a polished visual system ready to refine.",
-  };
-
-  return `${responses[copy.type]} The preview is now titled "${copy.title}".`;
-};
 
 export default function Workspace(): React.ReactElement {
   // Core workspace state
@@ -168,6 +89,9 @@ export default function Workspace(): React.ReactElement {
     "A clean AI-generated interface with hero content, feature modules, and polished conversion areas.",
   );
   const [previewType, setPreviewType] = useState<PreviewType>("default");
+  const [pageData, setPageData] = useState<any>(null);
+const [theme, setTheme] = useState("Dark");
+const [accentColors, setAccentColors] = useState<string[]>([]);
   const [device, setDevice] = useState<Device>("desktop");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -251,36 +175,90 @@ export default function Workspace(): React.ReactElement {
     return copy;
   };
 
-  const submitPrompt = (value: string): void => {
+  const submitPrompt = async (value: string): Promise<void> => {
+
     const trimmed = value.trim();
-    if (!trimmed || isGenerating) {
-      return;
-    }
 
-    const copy = updatePreview(trimmed);
+    if (!trimmed || isGenerating) return;
+
     const userMessage: Message = {
-      id: messageIdRef.current,
-      role: "user",
-      content: trimmed,
+        id: messageIdRef.current++,
+        role: "user",
+        content: trimmed,
     };
-    messageIdRef.current += 1;
 
-    setMessages((current) => [...current, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
+
     setIsGenerating(true);
 
-    window.setTimeout(() => {
-      const assistantMessage: Message = {
-        id: messageIdRef.current,
-        role: "assistant",
-        content: getAssistantReply(copy),
-      };
-      messageIdRef.current += 1;
+    try {
 
-      setMessages((current) => [...current, assistantMessage]);
-      setIsGenerating(false);
-      setPrompt("");
-    }, 2000);
-  };
+        const response = await fetch(
+            "http://127.0.0.1:8000/api/generate",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+                body: JSON.stringify({
+                    prompt: trimmed,
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        setPreviewTitle(data.title);
+
+        setPreviewDescription(data.description);
+
+        setPreviewType(data.type);
+
+        setPageData(data.page);
+
+        setTheme(data.theme);
+
+        setAccentColors(data.accentColors);
+
+        const assistantMessage: Message = {
+
+            id: messageIdRef.current++,
+
+            role: "assistant",
+
+            content: data.assistantMessage,
+
+        };
+
+        setMessages((prev) => [...prev, assistantMessage]);
+
+    } catch (error) {
+
+    console.error(error);
+
+    const assistantMessage: Message = {
+
+        id: messageIdRef.current++,
+
+        role: "assistant",
+
+        content: "Unable to connect to Morph Studio backend."
+
+    };
+
+    setMessages((prev) => [...prev, assistantMessage]);
+
+} finally {
+
+        setPrompt("");
+
+        setIsGenerating(false);
+
+    }
+
+};
 
   const addAssistantMessage = (content: string): void => {
     const assistantMessage: Message = {
