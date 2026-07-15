@@ -218,6 +218,8 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
 
         setPageData(data.page);
 
+        console.log("BACKEND RESPONSE:", data);
+
         setTheme(data.theme);
 
         setAccentColors(data.accentColors);
@@ -749,63 +751,125 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
 
   // Generated preview variants
   const renderLandingPreview = (): React.ReactElement => (
-    <div className="space-y-8">
-      <nav className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-bold text-white">
-          <Rocket className="h-5 w-5 text-fuchsia-300" />
-          NovaFlow
-        </div>
-        <div className="hidden gap-5 text-xs text-slate-400 sm:flex">
-          <span>Product</span>
-          <span>Teams</span>
-          <span>Pricing</span>
-        </div>
-        <button className="rounded-lg bg-white px-3 py-2 text-xs font-bold text-[#070B1A]" onClick={() => handlePreviewAction("Landing signup opened")} type="button">
-          Start free
-        </button>
-      </nav>
-      <div className="grid gap-6 md:grid-cols-[1.2fr_.8fr]">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-violet-300">AI launch system</p>
-          <h3 className="mt-4 text-5xl font-semibold leading-[1.03] tracking-tight text-white">
-            Build sharper launches in half the time.
-          </h3>
-          <p className="mt-4 text-sm leading-6 text-slate-400">
-            Plan, generate, and ship refined marketing surfaces with an adaptive AI workspace for modern teams.
-          </p>
-          <div className="mt-6 flex gap-3">
-            <button className="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-4 py-3 text-sm font-bold text-white" onClick={() => handlePreviewAction("Landing page generation CTA clicked")} type="button">
-              Generate site
-            </button>
-            <button className="rounded-xl border border-white/10 px-4 py-3 text-sm font-bold text-slate-200" onClick={() => handlePreviewAction("Landing demo opened")} type="button">
-              View demo
-            </button>
-          </div>
-        </div>
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-          <div className="h-44 rounded-xl bg-gradient-to-br from-violet-500/30 via-fuchsia-500/20 to-cyan-400/20 p-4">
-            <div className="h-full rounded-xl border border-white/10 bg-[#0B1020]/70 p-4">
-              <div className="h-3 w-24 rounded-full bg-white/30" />
-              <div className="mt-8 grid grid-cols-3 gap-2">
-                <span className="h-16 rounded-lg bg-white/10" />
-                <span className="h-24 rounded-lg bg-violet-400/30" />
-                <span className="h-12 rounded-lg bg-fuchsia-400/25" />
-              </div>
-            </div>
-          </div>
-        </div>
+  <div className="space-y-8">
+
+    <nav className="flex items-center justify-between">
+
+      <div className="flex items-center gap-2 text-sm font-bold text-white">
+        <Rocket className="h-5 w-5 text-fuchsia-300" />
+        {pageData.heroTitle ?? "Morph Studio"}
       </div>
-      <div className="grid gap-3 md:grid-cols-3">
-        {["AI wireframes", "Brand systems", "Instant export"].map((item) => (
-          <div key={item} className="rounded-xl border border-white/10 bg-[#13192B] p-4">
-            <div className="h-8 w-8 rounded-lg bg-violet-500/20" />
-            <p className="mt-4 text-sm font-semibold text-white">{item}</p>
-            <p className="mt-2 text-xs leading-5 text-slate-500">Production-minded blocks for fast iteration.</p>
-          </div>
+
+      <div className="hidden gap-5 text-xs text-slate-400 sm:flex">
+        {pageData.navbarItems?.map((item: string) => (
+          <span key={item}>{item}</span>
         ))}
       </div>
+
+      <button
+        type="button"
+        onClick={() => handlePreviewAction(pageData.primaryCta)}
+        className="rounded-lg bg-white px-3 py-2 text-xs font-bold text-[#070B1A]"
+      >
+        {pageData.primaryCta}
+      </button>
+
+    </nav>
+
+    <div className="grid gap-6 md:grid-cols-[1.2fr_.8fr]">
+
+      <div>
+
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-violet-300">
+          {pageData.eyebrow}
+        </p>
+
+        <h3 className="mt-4 text-5xl font-semibold leading-[1.03] tracking-tight text-white">
+          {pageData.heroTitle}
+        </h3>
+
+        <p className="mt-4 text-sm leading-6 text-slate-400">
+          {pageData.heroSubtitle}
+        </p>
+
+        <div className="mt-6 flex gap-3">
+
+          <button
+            type="button"
+            onClick={() => handlePreviewAction(pageData.primaryCta)}
+            className="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-4 py-3 text-sm font-bold text-white"
+          >
+            {pageData.primaryCta}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handlePreviewAction(pageData.secondaryCta)}
+            className="rounded-xl border border-white/10 px-4 py-3 text-sm font-bold text-slate-200"
+          >
+            {pageData.secondaryCta}
+          </button>
+
+        </div>
+
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+
+        <div className="space-y-3">
+
+          {pageData.skills?.map((skill: string) => (
+
+            <div
+              key={skill}
+              className="rounded-xl bg-violet-500/10 px-4 py-3 text-sm"
+            >
+              {skill}
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
+
     </div>
-  );
+
+    <div className="grid gap-3 md:grid-cols-3">
+
+      {pageData.cards?.map(
+        (
+          card: {
+            title: string;
+            description: string;
+          },
+          index: number
+        ) => (
+
+          <div
+            key={index}
+            className="rounded-xl border border-white/10 bg-[#13192B] p-4"
+          >
+
+            <div className="h-8 w-8 rounded-lg bg-violet-500/20" />
+
+            <p className="mt-4 text-sm font-semibold text-white">
+              {card.title}
+            </p>
+
+            <p className="mt-2 text-xs leading-5 text-slate-500">
+              {card.description}
+            </p>
+
+          </div>
+
+        )
+      )}
+
+    </div>
+
+  </div>
+);
 
   const renderDashboardPreview = (): React.ReactElement => (
     <div className="grid min-h-[620px] grid-cols-[180px_1fr] overflow-hidden rounded-2xl border border-white/10 bg-[#070B1A]">
