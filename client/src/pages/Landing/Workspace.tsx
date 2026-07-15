@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 
 type Role = "user" | "assistant";
-type PreviewType = "landing" | "dashboard" | "portfolio" | "login" | "pricing" | "ecommerce" | "default";
+type PreviewType = "landing" | "dashboard" | "portfolio" | "login" | "pricing" | "ecommerce" | "cartoon" | "default";
 type Device = "desktop" | "tablet" | "mobile";
 
 interface Message {
@@ -59,7 +59,7 @@ const actionButtons: ActionButton[] = [
   { label: "Export", icon: Download, options: ["Download HTML", "Copy React summary", "Export design notes"] },
 ];
 
-const quickPrompts = ["Landing Page", "Dashboard", "Portfolio", "Login UI", "Pricing Section", "E-commerce"];
+const quickPrompts = ["Landing Page", "Cartoon Page", "Dashboard", "Portfolio", "Login UI", "Pricing Section", "E-commerce"];
 
 const sidebarItems = [
   { label: "Projects", icon: FolderKanban },
@@ -77,6 +77,97 @@ const initialMessages: Message[] = [
       "Welcome to Morph Studio. Describe the interface you want and I will shape the preview, structure, and visual direction in real time.",
   },
 ];
+
+const describeCustomPrompt = (value: string): string => {
+  const cleaned = value
+    .replace(/[^\w\s-]/g, " ")
+    .replace(/\b(generate|create|build|make|design|a|an|the|ui|interface|page|website|web|app|for|me|please|with|dashboard|analytics|admin|portfolio|developer|personal|site|case|study|login|signin|sign|auth|pricing|plans|subscription|ecommerce|e-commerce|shop|store|landing|homepage|hero|startup|cartoon|comic|animation|animated|kids|children|section)\b/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return cleaned || "custom product";
+};
+
+const titleize = (value: string): string =>
+  value
+    .split(" ")
+    .filter(Boolean)
+    .map((word, index) => {
+      const lower = word.toLowerCase();
+      return index > 0 && ["and", "or", "for", "with", "of", "the", "a", "an"].includes(lower)
+        ? lower
+        : `${lower.charAt(0).toUpperCase()}${lower.slice(1)}`;
+    })
+    .join(" ");
+
+const getPreviewCopy = (value: string): PreviewCopy => {
+  const normalized = value.toLowerCase();
+
+  if (["cartoon", "comic", "animation", "animated", "kids", "children"].some((word) => normalized.includes(word))) {
+    return {
+      title: "Cartoon Adventure Page",
+      description: "A playful cartoon page with bright scenes, character cards, and story-driven calls to action.",
+      type: "cartoon",
+    };
+  }
+
+  if (["dashboard", "analytics", "admin"].some((word) => normalized.includes(word))) {
+    return {
+      title: "AI Analytics Dashboard",
+      description: "A dense operating dashboard with metrics, charts, tables, and daily workflow controls.",
+      type: "dashboard",
+    };
+  }
+
+  if (["portfolio", "developer", "personal site", "case study"].some((word) => normalized.includes(word))) {
+    return {
+      title: "Bright Web Developer Portfolio",
+      description: "A complete developer portfolio with a bold hero, project grid, skills, services, testimonials, and contact CTA.",
+      type: "portfolio",
+    };
+  }
+
+  if (["login", "signin", "sign in", "auth"].some((word) => normalized.includes(word))) {
+    return {
+      title: "Secure Login Experience",
+      description: "A focused authentication flow with polished inputs, account recovery, and sign in controls.",
+      type: "login",
+    };
+  }
+
+  if (["pricing", "plans", "subscription"].some((word) => normalized.includes(word))) {
+    return {
+      title: "SaaS Pricing Section",
+      description: "Conversion-focused pricing cards with feature comparison and a high-contrast CTA.",
+      type: "pricing",
+    };
+  }
+
+  if (["ecommerce", "e-commerce", "shop", "store"].some((word) => normalized.includes(word))) {
+    return {
+      title: "Premium Commerce Store",
+      description: "A modern storefront with merchandising, product cards, categories, and purchase CTAs.",
+      type: "ecommerce",
+    };
+  }
+
+  if (["landing", "homepage", "hero", "startup"].some((word) => normalized.includes(word))) {
+    return {
+      title: "Launch Landing Page",
+      description: "A crisp landing page with a hero, navigation, action buttons, and feature cards.",
+      type: "landing",
+    };
+  }
+
+  const subject = describeCustomPrompt(value);
+  const title = titleize(subject);
+
+  return {
+    title: `${title} UI`,
+    description: `A tailored interface concept for ${subject}, with relevant sections, actions, and content generated from the prompt.`,
+    type: "default",
+  };
+};
 
 
 export default function Workspace(): React.ReactElement {
@@ -118,6 +209,8 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
   }, [device]);
 
   const visibleZoom = `${zoomLevel}%`;
+  const primaryAccent = accentColors[0] ?? "#A78BFA";
+  const themeLabel = theme ? `${theme} theme` : "Theme ready";
 
   const sidebarContext = useMemo(() => {
     const descriptions: Record<string, string> = {
@@ -188,6 +281,8 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    setPageData(null);
+    updatePreview(trimmed);
 
     setIsGenerating(true);
 
@@ -761,7 +856,7 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
       </div>
 
       <div className="hidden gap-5 text-xs text-slate-400 sm:flex">
-        {pageData.navbarItems?.map((item: string) => (
+        {(pageData.navItems ?? pageData.navbarItems ?? []).map((item: string) => (
           <span key={item}>{item}</span>
         ))}
       </div>
@@ -1110,26 +1205,212 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
     </div>
   );
 
-  const renderDefaultPreview = (): React.ReactElement => (
-    <div className="space-y-6">
-      <section className="rounded-2xl border border-white/10 bg-[#13192B] p-8">
-        <p className="text-xs uppercase tracking-[0.25em] text-violet-300">Generated interface</p>
-        <h3 className="mt-4 max-w-2xl text-5xl font-semibold leading-tight text-white">A polished product surface for your next idea.</h3>
-        <p className="mt-4 max-w-xl text-sm leading-6 text-slate-400">
-          Use the prompt bar to turn this into a landing page, dashboard, portfolio, pricing section, login UI, or storefront.
-        </p>
-      </section>
-      <section className="grid gap-3 md:grid-cols-3">
-        {["Adaptive layout", "Premium visuals", "Reusable sections"].map((item) => (
-          <div key={item} className="rounded-xl border border-white/10 bg-[#13192B] p-5">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-600/40 to-fuchsia-500/30" />
-            <p className="mt-4 text-sm font-semibold text-white">{item}</p>
-            <p className="mt-2 text-xs leading-5 text-slate-500">Ready for rapid iteration and refinement.</p>
+  const renderCartoonPreview = (): React.ReactElement => {
+    const cartoonPage = pageData ?? {
+      navItems: ["Story", "Characters", "Scenes", "Watch"],
+      eyebrow: "Saturday morning studio",
+      heroTitle: "Build a bright cartoon world in one click.",
+      heroSubtitle: "A cheerful illustrated landing page with bubbly shapes, character moments, episode cards, and playful calls to action.",
+      primaryCta: "Start the story",
+      secondaryCta: "Meet characters",
+      cards: [
+        { title: "Sunny Hero Scene", description: "A bold opening panel with cloud shapes, comic bursts, and a friendly mascot moment.", meta: "Hero" },
+        { title: "Character Lineup", description: "Rounded profile cards for the cast with simple traits, colors, and story hooks.", meta: "Cast" },
+        { title: "Episode Tiles", description: "Preview blocks for adventures, lessons, and playful scenes visitors can explore.", meta: "Episodes" },
+      ],
+      skills: ["Bubbly hero", "Comic cards", "Character cast", "Bright palette"],
+    };
+
+    return (
+      <div className="min-h-[620px] overflow-hidden rounded-3xl border-4 border-[#1F2937] bg-[#FFF7D6] text-[#1F2937] shadow-[8px_8px_0_#111827]">
+        <nav className="flex flex-wrap items-center justify-between gap-3 border-b-4 border-[#1F2937] bg-[#38BDF8] px-5 py-4">
+          <div className="flex items-center gap-3 text-base font-black">
+            <span className="grid h-10 w-10 place-items-center rounded-full border-4 border-[#1F2937] bg-[#FFB703] shadow-[3px_3px_0_#111827]">
+              <Sparkles className="h-5 w-5" />
+            </span>
+            Toon Studio
           </div>
-        ))}
-      </section>
-    </div>
-  );
+          <div className="flex flex-wrap gap-2 text-xs font-black uppercase">
+            {(cartoonPage.navItems ?? []).map((item: string) => (
+              <button
+                key={item}
+                className="rounded-full border-2 border-[#1F2937] bg-white px-3 py-1 shadow-[2px_2px_0_#111827]"
+                onClick={() => handlePreviewAction(`${item} opened`)}
+                type="button"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        <section className="relative grid gap-6 px-6 py-8 md:grid-cols-[1.05fr_.95fr]">
+          <div className="absolute right-10 top-8 h-20 w-20 rounded-full border-4 border-[#1F2937] bg-[#FFB703]" />
+          <div className="absolute bottom-12 left-1/2 h-10 w-24 rounded-full border-4 border-[#1F2937] bg-white" />
+
+          <div className="relative z-10">
+            <p className="inline-flex rounded-full border-2 border-[#1F2937] bg-[#FB7185] px-3 py-1 text-xs font-black uppercase text-white shadow-[3px_3px_0_#111827]">
+              {cartoonPage.eyebrow}
+            </p>
+            <h3 className="mt-5 max-w-xl text-5xl font-black leading-[1.02] text-[#111827]">
+              {cartoonPage.heroTitle}
+            </h3>
+            <p className="mt-4 max-w-lg text-sm font-semibold leading-6 text-[#374151]">
+              {cartoonPage.heroSubtitle}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                className="rounded-2xl border-4 border-[#1F2937] bg-[#FFB703] px-5 py-3 text-sm font-black shadow-[4px_4px_0_#111827]"
+                onClick={() => handlePreviewAction(cartoonPage.primaryCta)}
+                type="button"
+              >
+                {cartoonPage.primaryCta}
+              </button>
+              <button
+                className="rounded-2xl border-4 border-[#1F2937] bg-white px-5 py-3 text-sm font-black shadow-[4px_4px_0_#111827]"
+                onClick={() => handlePreviewAction(cartoonPage.secondaryCta)}
+                type="button"
+              >
+                {cartoonPage.secondaryCta}
+              </button>
+            </div>
+          </div>
+
+          <div className="relative z-10 min-h-[320px] rounded-[2rem] border-4 border-[#1F2937] bg-[#A7F3D0] p-5 shadow-[8px_8px_0_#111827]">
+            <div className="absolute left-8 top-8 h-20 w-28 rounded-full border-4 border-[#1F2937] bg-white" />
+            <div className="absolute right-8 top-14 h-16 w-24 rounded-full border-4 border-[#1F2937] bg-white" />
+            <div className="absolute bottom-8 left-1/2 h-32 w-32 -translate-x-1/2 rounded-full border-4 border-[#1F2937] bg-[#FB7185] shadow-[5px_5px_0_#111827]" />
+            <div className="absolute bottom-24 left-1/2 h-20 w-24 -translate-x-1/2 rounded-full border-4 border-[#1F2937] bg-[#FFE4E6]" />
+            <div className="absolute bottom-32 left-[44%] h-3 w-3 rounded-full bg-[#111827]" />
+            <div className="absolute bottom-32 right-[44%] h-3 w-3 rounded-full bg-[#111827]" />
+            <div className="absolute bottom-24 left-1/2 h-4 w-10 -translate-x-1/2 rounded-b-full border-b-4 border-[#111827]" />
+          </div>
+        </section>
+
+        <section className="grid gap-4 border-t-4 border-[#1F2937] bg-white px-6 py-6 md:grid-cols-3">
+          {(cartoonPage.cards ?? []).map((card: { title: string; description: string; meta?: string }, index: number) => (
+            <article
+              key={card.title}
+              className="rounded-2xl border-4 border-[#1F2937] bg-[#FDE68A] p-4 shadow-[5px_5px_0_#111827]"
+            >
+              <div className={`mb-4 h-20 rounded-2xl border-4 border-[#1F2937] ${["bg-[#FB7185]", "bg-[#38BDF8]", "bg-[#A7F3D0]"][index % 3]}`} />
+              <p className="text-xs font-black uppercase text-[#BE123C]">{card.meta ?? "Scene"}</p>
+              <h4 className="mt-2 text-lg font-black">{card.title}</h4>
+              <p className="mt-2 text-xs font-semibold leading-5 text-[#4B5563]">{card.description}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="flex flex-wrap gap-2 border-t-4 border-[#1F2937] bg-[#FB7185] px-6 py-4">
+          {(cartoonPage.skills ?? []).map((skill: string) => (
+            <span key={skill} className="rounded-full border-2 border-[#1F2937] bg-white px-3 py-1 text-xs font-black shadow-[2px_2px_0_#111827]">
+              {skill}
+            </span>
+          ))}
+        </section>
+      </div>
+    );
+  };
+
+  const renderDefaultPreview = (): React.ReactElement => {
+    const generatedPage = pageData ?? {
+      navItems: ["Overview", "Features", "Workflow", "Launch"],
+      eyebrow: "Generated interface",
+      heroTitle: previewTitle,
+      heroSubtitle: previewDescription,
+      primaryCta: "Explore concept",
+      secondaryCta: "Refine design",
+      cards: [
+        { title: "Adaptive layout", description: "A responsive structure shaped around the current prompt.", meta: "Layout" },
+        { title: "Prompt-specific content", description: "Sections, copy, and actions update to match the requested UI.", meta: "Content" },
+        { title: "Reusable modules", description: "Cards and feature blocks are ready for further iteration.", meta: "System" },
+      ],
+      skills: ["Responsive layout", "Prompt-specific content", "Reusable sections", "Clear CTAs"],
+      contactCta: "Keep refining this UI with another prompt.",
+    };
+
+    return (
+      <div className="space-y-6">
+        <nav className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-sm font-bold text-white">
+            <Sparkles className="h-5 w-5" style={{ color: primaryAccent }} />
+            {previewTitle}
+          </div>
+          <div className="flex flex-wrap gap-2 text-xs text-slate-400">
+            {(generatedPage.navItems ?? []).map((item: string) => (
+              <button
+                key={item}
+                className="rounded-lg border border-white/10 px-3 py-1.5 transition hover:bg-white/[0.06] hover:text-white"
+                onClick={() => handlePreviewAction(`${item} opened`)}
+                type="button"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        <section className="grid gap-5 rounded-2xl border border-white/10 bg-[#13192B] p-6 md:grid-cols-[1.1fr_.9fr]">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em]" style={{ color: primaryAccent }}>
+              {generatedPage.eyebrow}
+            </p>
+            <h3 className="mt-4 max-w-2xl text-5xl font-semibold leading-tight text-white">
+              {generatedPage.heroTitle}
+            </h3>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-slate-400">
+              {generatedPage.heroSubtitle}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                className="rounded-xl px-4 py-3 text-sm font-bold text-white"
+                onClick={() => handlePreviewAction(generatedPage.primaryCta)}
+                style={{ backgroundColor: primaryAccent }}
+                type="button"
+              >
+                {generatedPage.primaryCta}
+              </button>
+              <button
+                className="rounded-xl border border-white/10 px-4 py-3 text-sm font-bold text-slate-200"
+                onClick={() => handlePreviewAction(generatedPage.secondaryCta)}
+                type="button"
+              >
+                {generatedPage.secondaryCta}
+              </button>
+            </div>
+          </div>
+
+          <div className="grid content-start gap-3 rounded-xl border border-white/10 bg-[#070B1A] p-4">
+            {(generatedPage.skills ?? []).slice(0, 6).map((skill: string) => (
+              <div key={skill} className="rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-200">
+                {skill}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="grid gap-3 md:grid-cols-3">
+          {(generatedPage.cards ?? []).map((card: { title: string; description: string; meta?: string }, index: number) => (
+            <div key={card.title} className="rounded-xl border border-white/10 bg-[#13192B] p-5">
+              <div
+                className="grid h-10 w-10 place-items-center rounded-lg text-sm font-black text-white"
+                style={{ backgroundColor: accentColors[index % accentColors.length] ?? primaryAccent }}
+              >
+                {index + 1}
+              </div>
+              <p className="mt-4 text-xs uppercase tracking-[0.18em] text-slate-500">{card.meta ?? "Module"}</p>
+              <p className="mt-2 text-sm font-semibold text-white">{card.title}</p>
+              <p className="mt-2 text-xs leading-5 text-slate-500">{card.description}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+          <p className="text-sm font-semibold text-white">{generatedPage.contactCta}</p>
+        </section>
+      </div>
+    );
+  };
 
   const renderGeneratedPreview = (): React.ReactElement => {
     switch (previewType) {
@@ -1145,6 +1426,8 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
         return renderPricingPreview();
       case "ecommerce":
         return renderEcommercePreview();
+      case "cartoon":
+        return renderCartoonPreview();
       default:
         return renderDefaultPreview();
     }
@@ -1154,9 +1437,9 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
     <section className="flex min-w-0 basis-[60%] flex-col bg-[#070B1A]">
       <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
         <div>
-          <p className="text-xs font-semibold tracking-[0.24em] text-violet-300">LIVE PREVIEW</p>
+          <p className="text-xs font-semibold tracking-[0.24em]" style={{ color: primaryAccent }}>LIVE PREVIEW</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">{previewTitle}</h2>
-          <p className="mt-1 max-w-2xl text-sm text-slate-400">{previewDescription}</p>
+          <p className="mt-1 max-w-2xl text-sm text-slate-400">{previewDescription} {themeLabel}</p>
         </div>
         <div className="flex rounded-xl border border-white/10 bg-[#0B1020] p-1">
           {[

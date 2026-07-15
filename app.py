@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -17,7 +18,7 @@ The JSON shape must be:
 {
   "title": "short page title",
   "description": "one sentence",
-  "type": "landing|dashboard|portfolio|login|pricing|ecommerce|default",
+  "type": "landing|dashboard|portfolio|login|pricing|ecommerce|cartoon|default",
   "theme": "dark|light",
   "accentColors": ["#hex", "#hex", "#hex"],
   "page": {
@@ -37,11 +38,14 @@ The JSON shape must be:
 }
 Understand user intent. If the user asks for a light theme, set theme to light.
 If they ask for bright colors, use vivid accent hex colors.
+For any UI that is not one of the named types, set type to "default" but make every page field specific to the user's requested product, app, website, tool, or experience. Never return generic placeholder copy.
 """
 
 
 def infer_type(prompt: str) -> str:
     value = prompt.lower()
+    if any(word in value for word in ["cartoon", "comic", "animation", "animated", "kids", "children"]):
+        return "cartoon"
     if any(word in value for word in ["dashboard", "analytics", "admin"]):
         return "dashboard"
     if any(word in value for word in ["portfolio", "developer", "personal site", "case study"]):
@@ -57,26 +61,85 @@ def infer_type(prompt: str) -> str:
     return "default"
 
 
+def prompt_subject(prompt: str) -> str:
+    cleaned = re.sub(r"[^a-zA-Z0-9\s-]", " ", prompt).strip()
+    cleaned = re.sub(
+        r"\b(generate|create|build|make|design|a|an|the|ui|interface|page|website|web|app|for|me|please|with|dashboard|analytics|admin|portfolio|developer|personal|site|case|study|login|signin|sign|auth|pricing|plans|subscription|ecommerce|e-commerce|shop|store|landing|homepage|hero|startup|cartoon|comic|animation|animated|kids|children|section)\b",
+        " ",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return cleaned or "custom product"
+
+
+def titleize_subject(subject: str) -> str:
+    small_words = {"and", "or", "for", "with", "of", "the", "a", "an"}
+    words = subject.split()
+    return " ".join(word.capitalize() if word.lower() not in small_words or index == 0 else word.lower() for index, word in enumerate(words))
+
+
+def custom_page(prompt: str) -> dict[str, Any]:
+    subject = prompt_subject(prompt)
+    title_subject = titleize_subject(subject)
+    return {
+        "title": f"{title_subject} UI",
+        "description": f"A tailored interface concept for {subject}, with relevant sections, actions, and content generated from the prompt.",
+        "page": {
+            "navItems": ["Overview", "Features", "Workflow", "Launch"],
+            "eyebrow": f"Generated {title_subject} Experience",
+            "heroTitle": f"Design a polished {title_subject} interface.",
+            "heroSubtitle": f"Morph Studio shaped this preview around your request for {subject}, including a focused hero, useful content blocks, and clear product actions.",
+            "primaryCta": "Explore concept",
+            "secondaryCta": "Refine design",
+            "cards": [
+                {"title": f"{title_subject} Overview", "description": f"A strong opening section that explains the core value of the {subject} experience.", "meta": "Hero"},
+                {"title": "User Workflow", "description": "A practical section for the main user journey, actions, states, and supporting details.", "meta": "Flow"},
+                {"title": "Feature System", "description": "Reusable cards for the most important features, benefits, or content areas in this UI.", "meta": "Modules"},
+            ],
+            "skills": ["Responsive layout", "Prompt-specific content", "Reusable sections", "Clear CTAs", "Modern visual system"],
+            "contactCta": f"Keep refining this {subject} UI with another prompt.",
+        },
+        "assistantMessage": f"I generated a custom {subject} UI concept from your prompt.",
+    }
+
+
 def fallback_design(prompt: str) -> dict[str, Any]:
     preview_type = infer_type(prompt)
     wants_light = "light" in prompt.lower() or "bright" in prompt.lower()
+    custom = custom_page(prompt)
+    subject = prompt_subject(prompt)
+    if subject == "custom product":
+        subject = {
+            "portfolio": "developer work",
+            "dashboard": "analytics",
+            "login": "secure account",
+            "pricing": "subscription",
+            "ecommerce": "commerce",
+            "cartoon": "adventure",
+            "landing": "product launch",
+            "default": "custom product",
+        }[preview_type]
+    title_subject = titleize_subject(subject)
     titles = {
-        "portfolio": "Bright Web Developer Portfolio",
-        "dashboard": "AI Analytics Dashboard",
-        "login": "Secure Login Experience",
-        "pricing": "SaaS Pricing Section",
-        "ecommerce": "Premium Commerce Store",
-        "landing": "Launch Landing Page",
-        "default": "Modern Product Website",
+        "portfolio": f"{title_subject} Portfolio",
+        "dashboard": f"{title_subject} Dashboard",
+        "login": f"{title_subject} Login Experience",
+        "pricing": f"{title_subject} Pricing Section",
+        "ecommerce": f"{title_subject} Storefront",
+        "cartoon": f"{title_subject} Cartoon Page",
+        "landing": f"{title_subject} Landing Page",
+        "default": custom["title"],
     }
     descriptions = {
-        "portfolio": "A complete developer portfolio with a bold hero, project grid, skills, services, testimonials, and contact CTA.",
-        "dashboard": "A dense operating dashboard with metrics, charts, tables, and daily workflow controls.",
-        "login": "A focused authentication flow with polished inputs, account recovery, and sign in controls.",
-        "pricing": "Conversion-focused pricing cards with feature comparison and a high-contrast CTA.",
-        "ecommerce": "A modern storefront with merchandising, product cards, categories, and purchase CTAs.",
-        "landing": "A crisp landing page with a hero, navigation, action buttons, and feature cards.",
-        "default": "A clean AI-generated interface with hero content, feature modules, and polished conversion areas.",
+        "portfolio": f"A complete {subject} portfolio with a bold hero, project grid, skills, services, testimonials, and contact CTA.",
+        "dashboard": f"A dense {subject} dashboard with metrics, charts, tables, and daily workflow controls.",
+        "login": f"A focused {subject} authentication flow with polished inputs, account recovery, and sign in controls.",
+        "pricing": f"Conversion-focused {subject} pricing cards with feature comparison and a high-contrast CTA.",
+        "ecommerce": f"A modern {subject} storefront with merchandising, product cards, categories, and purchase CTAs.",
+        "cartoon": f"A playful {subject} cartoon page with illustrated story zones, bright scenes, character cards, and friendly actions.",
+        "landing": f"A crisp {subject} landing page with a hero, navigation, action buttons, and feature cards.",
+        "default": custom["description"],
     }
     page = {
         "navItems": ["Work", "Skills", "About", "Contact"],
@@ -102,25 +165,47 @@ def fallback_design(prompt: str) -> dict[str, Any]:
             "primaryCta": "Get started",
             "secondaryCta": "View demo",
             "cards": [
-                {"title": "Adaptive layout", "description": "Responsive sections tuned to the prompt and selected device.", "meta": "Layout"},
+                {"title": f"{title_subject} Structure", "description": f"Responsive sections tuned to the requested {subject} experience.", "meta": "Layout"},
                 {"title": "Modern styling", "description": "Premium spacing, color, and interaction states generated from intent.", "meta": "Design"},
                 {"title": "Ready to refine", "description": "Use the prompt bar to iterate sections, copy, and visual direction.", "meta": "AI"},
             ],
             "skills": ["React", "TypeScript", "Tailwind CSS", "Responsive UI"],
             "contactCta": "Refine this concept with another prompt.",
         }
+    if preview_type == "default":
+        page = custom["page"]
+    if preview_type == "cartoon":
+        page = {
+            "navItems": ["Story", "Characters", "Scenes", "Watch"],
+            "eyebrow": "Saturday morning studio",
+            "heroTitle": "Build a bright cartoon world in one click.",
+            "heroSubtitle": "A cheerful illustrated landing page with bubbly shapes, character moments, episode cards, and playful calls to action.",
+            "primaryCta": "Start the story",
+            "secondaryCta": "Meet characters",
+            "cards": [
+                {"title": "Sunny Hero Scene", "description": "A bold opening panel with cloud shapes, comic bursts, and a friendly mascot moment.", "meta": "Hero"},
+                {"title": "Character Lineup", "description": "Rounded profile cards for the cast with simple traits, colors, and story hooks.", "meta": "Cast"},
+                {"title": "Episode Tiles", "description": "Preview blocks for adventures, lessons, and playful scenes visitors can explore.", "meta": "Episodes"},
+            ],
+            "skills": ["Bubbly hero", "Comic cards", "Character cast", "Bright palette", "Kid-friendly CTA"],
+            "contactCta": "Ready for the next episode? Generate another cartoon scene.",
+        }
 
     return {
         "title": titles[preview_type],
         "description": descriptions[preview_type],
         "type": preview_type,
-        "theme": "light" if wants_light else "dark",
-        "accentColors": ["#7C3AED", "#EC4899", "#06B6D4"] if wants_light else ["#7C3AED", "#D946EF", "#22D3EE"],
+        "theme": "light" if wants_light or preview_type == "cartoon" else "dark",
+        "accentColors": ["#FFB703", "#FB7185", "#38BDF8"] if preview_type == "cartoon" else ["#7C3AED", "#EC4899", "#06B6D4"] if wants_light else ["#7C3AED", "#D946EF", "#22D3EE"],
         "page": page,
         "assistantMessage": (
             "I generated a full light-theme developer portfolio concept with bright accent colors, "
             "project sections, skills, and a contact-focused structure."
             if preview_type == "portfolio" and wants_light
+            else "I generated a bright cartoon page with character cards, playful sections, and a story-driven hero."
+            if preview_type == "cartoon"
+            else custom["assistantMessage"]
+            if preview_type == "default"
             else "I generated a structured Morph Studio preview from your prompt."
         ),
     }
@@ -170,7 +255,7 @@ def call_openai(prompt: str) -> dict[str, Any]:
     return {
         "title": generated.get("title") or fallback["title"],
         "description": generated.get("description") or fallback["description"],
-        "type": generated.get("type") if generated.get("type") in {"landing", "dashboard", "portfolio", "login", "pricing", "ecommerce", "default"} else fallback["type"],
+        "type": generated.get("type") if generated.get("type") in {"landing", "dashboard", "portfolio", "login", "pricing", "ecommerce", "cartoon", "default"} else fallback["type"],
         "theme": generated.get("theme") if generated.get("theme") in {"dark", "light"} else fallback["theme"],
         "accentColors": generated.get("accentColors") if isinstance(generated.get("accentColors"), list) else fallback["accentColors"],
         "page": generated.get("page") if isinstance(generated.get("page"), dict) else fallback["page"],
