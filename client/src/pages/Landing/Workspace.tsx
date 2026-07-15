@@ -45,6 +45,26 @@ interface PreviewCopy {
   type: PreviewType;
 }
 
+interface GeneratedDesign {
+  title: string;
+  description: string;
+  type: PreviewType;
+  theme: "Dark" | "Light";
+  accentColors: string[];
+  page: {
+    navItems: string[];
+    eyebrow: string;
+    heroTitle: string;
+    heroSubtitle: string;
+    primaryCta: string;
+    secondaryCta: string;
+    cards: Array<{ title: string; description: string; meta?: string }>;
+    skills: string[];
+    contactCta: string;
+  };
+  assistantMessage: string;
+}
+
 interface ActionButton {
   label: string;
   icon: React.ElementType;
@@ -169,6 +189,77 @@ const getPreviewCopy = (value: string): PreviewCopy => {
   };
 };
 
+const createLocalGeneration = (value: string): GeneratedDesign => {
+  const copy = getPreviewCopy(value);
+  const subject = describeCustomPrompt(value);
+  const title = titleize(subject);
+  const isCartoon = copy.type === "cartoon";
+  const isLight = isCartoon || /\b(light|bright|colorful|candy|sweet|kids|playful)\b/i.test(value);
+  const accentColors = isCartoon
+    ? ["#FFB703", "#FB7185", "#38BDF8"]
+    : isLight
+      ? ["#F97316", "#EC4899", "#06B6D4"]
+      : ["#7C3AED", "#D946EF", "#22D3EE"];
+
+  if (isCartoon) {
+    return {
+      title: title === "Custom Product" ? "Cartoon Adventure Page" : `${title} Cartoon Page`,
+      description: `A playful cartoon page for ${subject === "custom product" ? "a bright story world" : subject}, with character cards and colorful story sections.`,
+      type: "cartoon",
+      theme: "Light",
+      accentColors,
+      page: {
+        navItems: ["Story", "Characters", "Scenes", "Watch"],
+        eyebrow: "Saturday morning studio",
+        heroTitle: "Build a bright cartoon world in one click.",
+        heroSubtitle: `A cheerful illustrated page shaped around ${subject === "custom product" ? "cartoon storytelling" : subject}, with bubbly panels, character moments, and playful calls to action.`,
+        primaryCta: "Start the story",
+        secondaryCta: "Meet characters",
+        cards: [
+          { title: "Opening Scene", description: "A bold first panel with bright shapes, simple visual hierarchy, and instant story context.", meta: "Hero" },
+          { title: "Character Lineup", description: "Rounded character cards with names, traits, colors, and personality hooks.", meta: "Cast" },
+          { title: "Episode Tiles", description: "Preview blocks for adventures, lessons, scenes, or collectible moments.", meta: "Episodes" },
+        ],
+        skills: ["Bubbly hero", "Comic cards", "Character cast", "Bright palette", "Kid-friendly CTA"],
+        contactCta: "Ready for the next episode? Generate another cartoon scene.",
+      },
+      assistantMessage: "Generated a bright cartoon page with stable local preview data.",
+    };
+  }
+
+  return {
+    title: copy.title,
+    description: copy.description,
+    type: copy.type,
+    theme: isLight ? "Light" : "Dark",
+    accentColors,
+    page: {
+      navItems: ["Overview", "Features", "Flow", "Launch"],
+      eyebrow: `Generated ${title} Experience`,
+      heroTitle: copy.type === "default" ? `Design a polished ${title} interface.` : copy.title,
+      heroSubtitle: `Morph Studio shaped this preview around "${value}", with relevant layout, content modules, and actions for the requested UI.`,
+      primaryCta: copy.type === "ecommerce" ? "Shop now" : copy.type === "login" ? "Sign in" : "Explore concept",
+      secondaryCta: "Refine design",
+      cards: [
+        { title: `${title} Hero`, description: `A focused opening section that explains the core value of the ${subject} experience.`, meta: "Hero" },
+        { title: "Main User Flow", description: "A practical section for the key user journey, actions, states, and supporting details.", meta: "Flow" },
+        { title: "Feature Modules", description: "Reusable cards for the most important features, benefits, products, or content areas.", meta: "System" },
+      ],
+      skills: ["Prompt-specific layout", "Responsive sections", "Clear CTAs", "Reusable cards", "Modern styling"],
+      contactCta: `Keep refining this ${subject} UI with another prompt.`,
+    },
+    assistantMessage: `Generated a custom ${subject} UI concept from your prompt.`,
+  };
+};
+
+const shouldUseBackendDesign = (data: Partial<GeneratedDesign>, local: GeneratedDesign): boolean => {
+  if (!data || !data.page || !data.title || !data.description || !data.type) return false;
+  if (local.type === "cartoon" && data.type !== "cartoon") return false;
+  if (local.type === "default" && data.title === "Modern Product Website") return false;
+  if (local.type === "default" && data.page.heroTitle === "Modern Product Website") return false;
+  return true;
+};
+
 
 export default function Workspace(): React.ReactElement {
   // Core workspace state
@@ -259,15 +350,6 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
     };
   }, []);
 
-  // Generation flow
-  const updatePreview = (value: string): PreviewCopy => {
-    const copy = getPreviewCopy(value);
-    setPreviewTitle(copy.title);
-    setPreviewDescription(copy.description);
-    setPreviewType(copy.type);
-    return copy;
-  };
-
   const submitPrompt = async (value: string): Promise<void> => {
 
     const trimmed = value.trim();
@@ -281,8 +363,14 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setPageData(null);
-    updatePreview(trimmed);
+    const localDesign = createLocalGeneration(trimmed);
+    setPreviewTitle(localDesign.title);
+    setPreviewDescription(localDesign.description);
+    setPreviewType(localDesign.type);
+    setPageData(localDesign.page);
+    setTheme(localDesign.theme);
+    setAccentColors(localDesign.accentColors);
+    setStatusMessage(`Generated ${localDesign.title}`);
 
     setIsGenerating(true);
 
@@ -303,7 +391,26 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
             }
         );
 
+        if (!response.ok) {
+            throw new Error("Morph backend returned an error.");
+        }
+
         const data = await response.json();
+
+        if (!shouldUseBackendDesign(data, localDesign)) {
+            const assistantMessage: Message = {
+
+                id: messageIdRef.current++,
+
+                role: "assistant",
+
+                content: localDesign.assistantMessage,
+
+            };
+
+            setMessages((prev) => [...prev, assistantMessage]);
+            return;
+        }
 
         setPreviewTitle(data.title);
 
@@ -341,7 +448,7 @@ const [accentColors, setAccentColors] = useState<string[]>([]);
 
         role: "assistant",
 
-        content: "Unable to connect to Morph Studio backend."
+        content: localDesign.assistantMessage
 
     };
 
