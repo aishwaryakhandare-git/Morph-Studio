@@ -200,6 +200,8 @@ class MorphHandler(BaseHTTPRequestHandler):
         self.send_json(404, {"error": "Not found"})
 
     def do_POST(self) -> None:
+
+        print("POST:", self.path)
         if self.path != "/api/generate":
             self.send_json(404, {"error": "Not found"})
             return
