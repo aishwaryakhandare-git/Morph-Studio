@@ -32,6 +32,7 @@ import {
 type Role = "user" | "assistant";
 type PreviewType = "landing" | "dashboard" | "portfolio" | "login" | "pricing" | "ecommerce" | "cartoon" | "default";
 type Device = "desktop" | "tablet" | "mobile";
+type VisualKind = "music" | "candy" | "food" | "travel" | "fitness" | "finance" | "education" | "commerce" | "product";
 
 interface Message {
   id: number;
@@ -61,6 +62,9 @@ interface GeneratedDesign {
     cards: Array<{ title: string; description: string; meta?: string }>;
     skills: string[];
     contactCta: string;
+    visualKind?: VisualKind;
+    spotlight?: string;
+    metricLabels?: string[];
   };
   assistantMessage: string;
 }
@@ -119,6 +123,178 @@ const titleize = (value: string): string =>
         : `${lower.charAt(0).toUpperCase()}${lower.slice(1)}`;
     })
     .join(" ");
+
+const inferVisualKind = (value: string): VisualKind => {
+  const normalized = value.toLowerCase();
+
+  if (/\b(music|song|audio|playlist|artist|album|podcast|radio|beats?)\b/.test(normalized)) return "music";
+  if (/\b(candy|sweet|chocolate|dessert|bakery|cake|ice cream|donut|sugar)\b/.test(normalized)) return "candy";
+  if (/\b(food|restaurant|delivery|menu|recipe|chef|meal|pizza|coffee|cafe)\b/.test(normalized)) return "food";
+  if (/\b(travel|hotel|trip|booking|flight|vacation|tour|destination)\b/.test(normalized)) return "travel";
+  if (/\b(fitness|gym|workout|health|yoga|training|wellness)\b/.test(normalized)) return "fitness";
+  if (/\b(finance|bank|crypto|wallet|trading|invoice|payment|budget)\b/.test(normalized)) return "finance";
+  if (/\b(education|learning|course|school|student|lesson|academy)\b/.test(normalized)) return "education";
+  if (/\b(ecommerce|e-commerce|shop|store|marketplace|product)\b/.test(normalized)) return "commerce";
+  return "product";
+};
+
+const visualRecipes: Record<VisualKind, {
+  navItems: string[];
+  eyebrow: string;
+  primaryCta: string;
+  secondaryCta: string;
+  skills: string[];
+  cards: Array<{ title: string; description: string; meta: string }>;
+  accentColors: string[];
+  metricLabels: string[];
+  spotlight: string;
+  theme: "Dark" | "Light";
+}> = {
+  music: {
+    navItems: ["Discover", "Library", "Artists", "Premium"],
+    eyebrow: "Immersive audio experience",
+    primaryCta: "Play preview",
+    secondaryCta: "Open library",
+    skills: ["Now playing", "Waveform queue", "Artist cards", "Mood filters", "Mini player"],
+    cards: [
+      { title: "Daily Mix Console", description: "A hero player with artwork, progress, queue, and mood controls.", meta: "Player" },
+      { title: "Artist Discovery", description: "Editorial cards for albums, creators, playlists, and listening moments.", meta: "Browse" },
+      { title: "Smart Queue", description: "A dense playback panel for next tracks, favorites, and recommendations.", meta: "Flow" },
+    ],
+    accentColors: ["#8B5CF6", "#EC4899", "#22D3EE"],
+    metricLabels: ["82k listeners", "24 playlists", "4.9 rating"],
+    spotlight: "Now playing",
+    theme: "Dark",
+  },
+  candy: {
+    navItems: ["Flavors", "Boxes", "Gifts", "Visit"],
+    eyebrow: "Colorful candy storefront",
+    primaryCta: "Build a box",
+    secondaryCta: "See flavors",
+    skills: ["Flavor tiles", "Gift bundles", "Bright hero", "Cart preview", "Seasonal drops"],
+    cards: [
+      { title: "Pick Your Mix", description: "A playful picker for gummies, chocolates, sour candy, and limited sweets.", meta: "Shop" },
+      { title: "Gift Box Builder", description: "A polished bundle builder with quantities, ribbons, notes, and checkout.", meta: "Flow" },
+      { title: "Flavor Stories", description: "Editorial sections for new drops, ingredients, and tasting notes.", meta: "Content" },
+    ],
+    accentColors: ["#FB7185", "#FBBF24", "#38BDF8"],
+    metricLabels: ["36 flavors", "12 gift boxes", "4.8 sweet score"],
+    spotlight: "Sweet drop",
+    theme: "Light",
+  },
+  food: {
+    navItems: ["Menu", "Popular", "Track Order", "Rewards"],
+    eyebrow: "Fast ordering experience",
+    primaryCta: "Order now",
+    secondaryCta: "View menu",
+    skills: ["Menu grid", "Cart drawer", "Delivery tracker", "Rewards", "Chef picks"],
+    cards: [
+      { title: "Menu Explorer", description: "Category tabs, dish cards, modifiers, and appetite-first imagery blocks.", meta: "Menu" },
+      { title: "Quick Cart", description: "A sticky ordering panel with totals, delivery ETA, and payment states.", meta: "Checkout" },
+      { title: "Live Delivery", description: "A tracking module for kitchen status, driver movement, and arrival time.", meta: "Status" },
+    ],
+    accentColors: ["#F97316", "#22C55E", "#FACC15"],
+    metricLabels: ["18 min ETA", "4.9 kitchen", "2.4k orders"],
+    spotlight: "Chef pick",
+    theme: "Light",
+  },
+  travel: {
+    navItems: ["Destinations", "Stays", "Trips", "Support"],
+    eyebrow: "Premium travel planner",
+    primaryCta: "Plan trip",
+    secondaryCta: "Explore stays",
+    skills: ["Destination cards", "Booking flow", "Trip timeline", "Saved places", "Concierge CTA"],
+    cards: [
+      { title: "Destination Search", description: "A cinematic search surface for places, dates, guests, and budget.", meta: "Search" },
+      { title: "Trip Timeline", description: "A day-by-day itinerary with hotels, activities, and transport.", meta: "Planner" },
+      { title: "Saved Escapes", description: "Collections for beaches, cities, retreats, and weekend ideas.", meta: "Library" },
+    ],
+    accentColors: ["#0EA5E9", "#14B8A6", "#F59E0B"],
+    metricLabels: ["128 stays", "42 cities", "24/7 help"],
+    spotlight: "Next escape",
+    theme: "Light",
+  },
+  fitness: {
+    navItems: ["Programs", "Progress", "Meals", "Coach"],
+    eyebrow: "Training and wellness OS",
+    primaryCta: "Start workout",
+    secondaryCta: "View plan",
+    skills: ["Workout cards", "Progress rings", "Coach notes", "Meal blocks", "Streaks"],
+    cards: [
+      { title: "Workout Plan", description: "Daily training cards with duration, intensity, and guided movement.", meta: "Plan" },
+      { title: "Progress Rings", description: "A visual dashboard for streaks, strength, recovery, and goals.", meta: "Metrics" },
+      { title: "Coach Feedback", description: "A personal coaching panel for reminders, form notes, and next steps.", meta: "Coach" },
+    ],
+    accentColors: ["#22C55E", "#06B6D4", "#A3E635"],
+    metricLabels: ["12 streak", "640 kcal", "86% recovery"],
+    spotlight: "Today plan",
+    theme: "Dark",
+  },
+  finance: {
+    navItems: ["Overview", "Cards", "Invest", "Reports"],
+    eyebrow: "Secure finance dashboard",
+    primaryCta: "View report",
+    secondaryCta: "Add account",
+    skills: ["Balance cards", "Spend chart", "Invoice states", "Risk alerts", "Export flow"],
+    cards: [
+      { title: "Balance Command", description: "A calm overview for accounts, cards, cash flow, and upcoming payments.", meta: "Money" },
+      { title: "Spend Intelligence", description: "Charts, categories, anomalies, and month-over-month summaries.", meta: "Insights" },
+      { title: "Action Center", description: "Approvals, invoices, transfers, alerts, and secure task states.", meta: "Ops" },
+    ],
+    accentColors: ["#10B981", "#60A5FA", "#A78BFA"],
+    metricLabels: ["$24.8k cash", "18% saved", "3 alerts"],
+    spotlight: "Cash flow",
+    theme: "Dark",
+  },
+  education: {
+    navItems: ["Courses", "Lessons", "Progress", "Mentors"],
+    eyebrow: "Modern learning platform",
+    primaryCta: "Start lesson",
+    secondaryCta: "Browse courses",
+    skills: ["Course cards", "Lesson player", "Progress map", "Quizzes", "Mentor notes"],
+    cards: [
+      { title: "Lesson Studio", description: "A focused player with modules, transcripts, notes, and completion states.", meta: "Learn" },
+      { title: "Course Path", description: "A structured roadmap for skills, milestones, projects, and certificates.", meta: "Path" },
+      { title: "Practice Hub", description: "Quizzes, exercises, streaks, and mentor feedback in one place.", meta: "Practice" },
+    ],
+    accentColors: ["#6366F1", "#F59E0B", "#14B8A6"],
+    metricLabels: ["8 modules", "74% done", "5 projects"],
+    spotlight: "Next lesson",
+    theme: "Light",
+  },
+  commerce: {
+    navItems: ["New", "Collections", "Reviews", "Cart"],
+    eyebrow: "Premium shopping experience",
+    primaryCta: "Shop collection",
+    secondaryCta: "View details",
+    skills: ["Product hero", "Variant picker", "Review cards", "Cart module", "Collection grid"],
+    cards: [
+      { title: "Product Theatre", description: "A high-impact product hero with variants, price, reviews, and inventory.", meta: "Hero" },
+      { title: "Collection Grid", description: "Shoppable cards with filters, badges, favorites, and quick actions.", meta: "Browse" },
+      { title: "Cart Confidence", description: "Checkout modules for shipping, bundles, guarantees, and payment.", meta: "Checkout" },
+    ],
+    accentColors: ["#F43F5E", "#8B5CF6", "#06B6D4"],
+    metricLabels: ["4.9 reviews", "32 items", "2-day ship"],
+    spotlight: "Featured drop",
+    theme: "Light",
+  },
+  product: {
+    navItems: ["Product", "Workflow", "Teams", "Launch"],
+    eyebrow: "Generated product experience",
+    primaryCta: "Launch preview",
+    secondaryCta: "Refine system",
+    skills: ["Hero system", "Workflow map", "Feature grid", "Status panels", "Conversion CTA"],
+    cards: [
+      { title: "Product Story", description: "A polished hero and value section shaped around the user's request.", meta: "Hero" },
+      { title: "Workflow Surface", description: "A usable area for the main actions, states, and product flow.", meta: "Flow" },
+      { title: "Feature Library", description: "Reusable modules for benefits, proof, details, and next actions.", meta: "System" },
+    ],
+    accentColors: ["#7C3AED", "#D946EF", "#22D3EE"],
+    metricLabels: ["Live preview", "6 modules", "Ready to refine"],
+    spotlight: "Concept build",
+    theme: "Dark",
+  },
+};
 
 const getPreviewCopy = (value: string): PreviewCopy => {
   const normalized = value.toLowerCase();
@@ -193,13 +369,13 @@ const createLocalGeneration = (value: string): GeneratedDesign => {
   const copy = getPreviewCopy(value);
   const subject = describeCustomPrompt(value);
   const title = titleize(subject);
+  const visualKind = inferVisualKind(value);
+  const recipe = visualRecipes[visualKind];
   const isCartoon = copy.type === "cartoon";
-  const isLight = isCartoon || /\b(light|bright|colorful|candy|sweet|kids|playful)\b/i.test(value);
+  const isLight = isCartoon || recipe.theme === "Light" || /\b(light|bright|colorful|candy|sweet|kids|playful)\b/i.test(value);
   const accentColors = isCartoon
     ? ["#FFB703", "#FB7185", "#38BDF8"]
-    : isLight
-      ? ["#F97316", "#EC4899", "#06B6D4"]
-      : ["#7C3AED", "#D946EF", "#22D3EE"];
+    : recipe.accentColors;
 
   if (isCartoon) {
     return {
@@ -222,6 +398,9 @@ const createLocalGeneration = (value: string): GeneratedDesign => {
         ],
         skills: ["Bubbly hero", "Comic cards", "Character cast", "Bright palette", "Kid-friendly CTA"],
         contactCta: "Ready for the next episode? Generate another cartoon scene.",
+        visualKind: "candy",
+        spotlight: "Story scene",
+        metricLabels: ["3 scenes", "5 characters", "Bright mode"],
       },
       assistantMessage: "Generated a bright cartoon page with stable local preview data.",
     };
@@ -234,19 +413,21 @@ const createLocalGeneration = (value: string): GeneratedDesign => {
     theme: isLight ? "Light" : "Dark",
     accentColors,
     page: {
-      navItems: ["Overview", "Features", "Flow", "Launch"],
-      eyebrow: `Generated ${title} Experience`,
-      heroTitle: copy.type === "default" ? `Design a polished ${title} interface.` : copy.title,
-      heroSubtitle: `Morph Studio shaped this preview around "${value}", with relevant layout, content modules, and actions for the requested UI.`,
-      primaryCta: copy.type === "ecommerce" ? "Shop now" : copy.type === "login" ? "Sign in" : "Explore concept",
-      secondaryCta: "Refine design",
-      cards: [
-        { title: `${title} Hero`, description: `A focused opening section that explains the core value of the ${subject} experience.`, meta: "Hero" },
-        { title: "Main User Flow", description: "A practical section for the key user journey, actions, states, and supporting details.", meta: "Flow" },
-        { title: "Feature Modules", description: "Reusable cards for the most important features, benefits, products, or content areas.", meta: "System" },
-      ],
-      skills: ["Prompt-specific layout", "Responsive sections", "Clear CTAs", "Reusable cards", "Modern styling"],
-      contactCta: `Keep refining this ${subject} UI with another prompt.`,
+      navItems: recipe.navItems,
+      eyebrow: recipe.eyebrow,
+      heroTitle: copy.type === "default" ? `${title} that feels ready to ship.` : copy.title,
+      heroSubtitle: `A generated ${subject} experience with domain-specific layout, polished visual modules, and realistic product moments instead of generic placeholder cards.`,
+      primaryCta: copy.type === "ecommerce" ? "Shop now" : copy.type === "login" ? "Sign in" : recipe.primaryCta,
+      secondaryCta: recipe.secondaryCta,
+      cards: recipe.cards.map((card) => ({
+        ...card,
+        title: card.title.replace("Product", title).replace("Daily Mix", title),
+      })),
+      skills: recipe.skills,
+      contactCta: `Keep refining this ${subject} UI with richer sections, states, and visual direction.`,
+      visualKind,
+      spotlight: recipe.spotlight,
+      metricLabels: recipe.metricLabels,
     },
     assistantMessage: `Generated a custom ${subject} UI concept from your prompt.`,
   };
